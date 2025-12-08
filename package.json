@@ -1,0 +1,11 @@
+{
+  "name": "iomp-frontend",
+  "version": "1.0.0",
+  "description": "IOMP Frontend",
+  "scripts": {},
+  "keywords": [
+    "iomp"
+  ],
+  "author": "",
+  "license": "ISC"
+}
