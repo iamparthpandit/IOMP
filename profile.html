@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LinkedIn Profile Page</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#0A66C2",
+            "background-light": "#f3f2f0",
+            "background-dark": "#1a1a1a",
+          },
+          fontFamily: {
+            "display": ["Lexend", "sans-serif"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      font-size: 24px;
+    }
+  </style>
+</head>
+<body class="bg-background-light font-display">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<header class="sticky top-0 z-50 flex items-center justify-center whitespace-nowrap bg-white border-b border-solid border-gray-200 px-4">
+<div class="flex items-center justify-between w-full max-w-6xl">
+<div class="flex items-center gap-2">
+<div class="flex items-center gap-2 text-primary">
+<svg class="w-10 h-10" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z"></path>
+</svg>
+</div>
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">search</span>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-gray-900 focus:outline-0 focus:ring-2 focus:ring-primary border-gray-300 bg-gray-100 h-10 placeholder:text-gray-500 pl-10 pr-4 text-sm font-normal leading-normal" placeholder="Search" value=""/>
+</div>
+</div>
+<div class="flex items-center justify-end">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-8" data-alt="User profile picture" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA345hNrsld45MIew0Tsb2mPq1DwWBN5ipFO3EW-8KkUrDtNRo38DedTRfBOYJ67b6McehdQep2Dku1v56w-d3tikpOFUUoBM5fUm87SFdjW_1PHwpYHHrT__Nfbfcc8_E7uEpSXpW1qDFJ3QEk6dg5wqm9Pj9uA6L5UdeyAMOPzDTfMFOVZFIAZaa0QJEJY9SnmXjoeWAyi1txvr0vwRle-BFtTv0IKgbWaAj3QbhU2lYbH176fpDAzJA5mEclROx2wUx6IEdoJGaV");'></div>
+</div>
+</div>
+</header>
+<main class="flex justify-center p-4 sm:p-6 lg:p-8">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-6xl">
+<div class="lg:col-span-8 flex flex-col gap-6">
+<div class="bg-white rounded-lg overflow-hidden border border-gray-200">
+<div class="relative">
+<div class="h-32 sm:h-48 bg-center bg-no-repeat bg-cover" data-alt="Gradient cover photo with blue and purple hues" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBjki3A7k5NxVUO34crGNzhUPhTYmOVH_K_WSMkurcy9glr4ewDcJ8yZ4NbMxSoQnqMLgvGcErFY705JEEmD7bMb9K6QFcTfvRq1-lGVZbznVKA3CH2WkqzD4jU9cIicoKos1OcBDYHn-OQLU1RIbz5BZp6y-QOfw_VSTMCsLc8OPCKrIhP118bnHhHhPh5DyHBTIQdmAq7mTnX8_UmGuw03pL6ZbFi74CaJklzOrrHDC7qkNvLUo0D2dwxghQrn6qXO3siVlQlWhJI");'></div>
+<div class="absolute -bottom-16 left-6 bg-center bg-no-repeat aspect-square bg-cover rounded-full w-32 h-32 border-4 border-white" data-alt="Profile picture of Alex Doe" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAMUYBT7atUr-Chyy3SORIZwOHwZzZXC9i1TzbFcDU9ETJWLrYd4CGwhZWMzgDFyZSeeXUjKC9K0OoQlcRNJUNNTD510nohR2HmGEuQ1d_-JhDZdslVaFQ5DBrEEVRq5EBprOmmMF_TaUua6Rfrf0S2YR4kVRrrUBCcO-pR3ZjDiPhEfH9LWjuUhMcMEIKCUcQ7DmdzhMQhyy0SmqPpLTFACeMMkbnQiBo65melQyzKeJJyKYcUFQ970XdaqiUbdgARiguu9l6fnNgM");'></div>
+</div>
+<div class="pt-20 p-6">
+<div class="flex flex-col sm:flex-row justify-between items-start">
+<div>
+<h1 class="text-gray-900 text-2xl font-bold leading-tight">Alex Doe</h1>
+<p class="text-gray-700 text-base font-normal">Senior Product Manager at Tech Solutions Inc. | AI &amp; Machine Learning Enthusiast</p>
+<p class="text-gray-500 text-sm mt-1">San Francisco Bay Area</p>
+</div>
+</div>
+<div class="flex items-center gap-4 mt-4">
+<a class="text-primary font-bold text-sm hover:underline" href="#">500+ connections</a>
+<a class="text-primary font-bold text-sm hover:underline" href="#">Contact info</a>
+</div>
+<div class="flex flex-wrap gap-3 mt-4">
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-9 px-4 bg-primary text-white text-sm font-bold">Open to</button>
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-9 px-4 bg-transparent text-primary text-sm font-bold border border-primary hover:bg-primary/10">Add profile section</button>
+</div>
+</div>
+</div>
+<div class="bg-white rounded-lg p-6 border border-gray-200">
+<h2 class="text-gray-900 text-xl font-bold">About</h2>
+<p class="text-gray-700 text-sm font-normal leading-relaxed mt-4">
+              Experienced Product Manager with a demonstrated history of working in the computer software industry. Skilled in Agile Methodologies, Go-to-Market Strategy, and Cross-functional Team Leadership. Strong product management professional with a Master of Business Administration (MBA) focused in Technology Management from University of California, Berkeley.
+            </p>
+</div>
+<div class="bg-white rounded-lg p-6 border border-gray-200">
+<h2 class="text-gray-900 text-xl font-bold">Analytics</h2>
+<p class="text-gray-500 text-sm mt-1">Private to you</p>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-gray-500">visibility</span>
+<div>
+<p class="text-gray-900 font-bold">128</p>
+<p class="text-gray-700 text-sm">Profile views</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-gray-500">bar_chart</span>
+<div>
+<p class="text-gray-900 font-bold">2,451</p>
+<p class="text-gray-700 text-sm">Post impressions</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-gray-500">search</span>
+<div>
+<p class="text-gray-900 font-bold">42</p>
+<p class="text-gray-700 text-sm">Search appearances</p>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-white rounded-lg p-6 border border-gray-200">
+<h2 class="text-gray-900 text-xl font-bold">Education</h2>
+<div class="mt-4 flex gap-4">
+<div class="w-12 h-12 flex-shrink-0 bg-white rounded-md flex items-center justify-center border border-gray-200"><img class="w-10 h-10 object-contain" data-alt="UC Berkeley Logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJhBbjWmR2QUJmCnRthpGf6LjXgcJGjPaI9Xg0n3sui4LZTvnVHE_OM0dntoZoeaVatc0DG0tkALHHcG7Yv8VRP8dVMNKjagVQP1oYlU-JXLyTc-fdNQK4ZyJAHuvh4-cQKBRkxK74P5q1ORR7BpBtsyuqjn5MQ3GK9es_28jqjUyq7c2LSRjRiAHygPh7GvrkEKjMLfrTuB_zR9D4AUPY5tr12m0FqbT9iCq-yHr30-G6MhtG77tFQI_U7e_6RWlYVQyk_uHO1G-v"/></div>
+<div>
+<h3 class="font-bold text-gray-900">University of California, Berkeley</h3>
+<p class="text-sm text-gray-700">Master of Business Administration (MBA), Technology Management</p>
+<p class="text-sm text-gray-500">2014 - 2016</p>
+</div>
+</div>
+</div>
+<div class="bg-white rounded-lg p-6 border border-gray-200">
+<h2 class="text-gray-900 text-xl font-bold">Skills</h2>
+<div class="flex flex-wrap gap-2 mt-4">
+<span class="bg-gray-200 text-gray-800 text-sm font-medium px-3 py-1 rounded-full">Product Management</span>
+<span class="bg-gray-200 text-gray-800 text-sm font-medium px-3 py-1 rounded-full">Agile Methodologies</span>
+<span class="bg-gray-200 text-gray-800 text-sm font-medium px-3 py-1 rounded-full">Go-to-Market Strategy</span>
+<span class="bg-gray-200 text-gray-800 text-sm font-medium px-3 py-1 rounded-full">Cross-functional Team Leadership</span>
+<span class="bg-gray-200 text-gray-800 text-sm font-medium px-3 py-1 rounded-full">Data Analysis</span>
+</div>
+</div>
+<div class="bg-white rounded-lg p-6 border border-gray-200">
+<h2 class="text-gray-900 text-xl font-bold">Interests</h2>
+<div class="mt-4">
+<div class="flex border-b border-gray-200">
+<button class="px-4 py-2 text-sm font-bold border-b-2 border-primary text-primary">Companies</button>
+<button class="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-900 border-b-2 border-transparent">Newsletters</button>
+<button class="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-900 border-b-2 border-transparent">Schools</button>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-md bg-white flex-shrink-0 flex items-center justify-center p-1 border border-gray-200"><img class="w-10 h-10 object-contain" data-alt="Google Logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA7v0YExvOBF-r9VG0D0_i7cYSgPuoNkyg5CsxzaX3yq5DVPwZeNZwU9nDbtOOIBDgqv6kvz--jJseoQPRec_UB-5xqb-09fQU45fVKIFG5dWQTcFhwV70qpmNDPL9CUK8zynsafp3c0eAP6FO27v1c35q0Tz2xqd4OZzjHqp75f8B95u7RwI7yS9evsoHHq6c9iC6dpPaUnJFk38-rmF3y5leAZFDFywT4sWurwdq2rN9EMQT-uy0BcTvula7jCrd30bn-XQpyIJDD"/></div>
+<div>
+<h4 class="font-bold text-gray-900">Google</h4>
+<p class="text-xs text-gray-500">15M followers</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-md bg-white flex-shrink-0 flex items-center justify-center p-1 border border-gray-200"><img class="w-10 h-10 object-contain" data-alt="Apple Logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDf2SMw_9VIcd7Q8xOVljr1aY8I6i5AFaegH5ytfi8tZJYhwUS8Z71NLBCpXM8guw-6gX5g_U1Nhl8c-jFegqQvJAU_C9NRVyK3fZ6-gXHpIlA2w3J8JLOJ0TDNk_qbIXsMSVJo5XJ2G8o3HjYNqU1pBjPFeTH1slcFTjVqtQxwRaLJDQ4owr_Ane615oG3QUvr0V2f2uRSb9eFHmVjfZiATQulTAROj9f6-v0IYKVonybjDlL1AQKI6RNL6VVPicWFpWhEbrHlaHkr"/></div>
+<div>
+<h4 class="font-bold text-gray-900">Apple</h4>
+<p class="text-xs text-gray-500">12M followers</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="lg:col-span-4 flex flex-col gap-6">
+<div class="bg-white rounded-lg p-4 border border-gray-200">
+<div class="flex justify-between items-center">
+<h3 class="text-sm text-gray-700">Profile Language</h3>
+<a class="text-sm text-primary font-bold hover:underline" href="#">Edit</a>
+</div>
+<p class="text-xs text-gray-500 mt-1">English</p>
+<div class="h-px bg-gray-200 my-3"></div>
+<div class="flex justify-between items-center">
+<h3 class="text-sm text-gray-700">Public profile &amp; URL</h3>
+<a class="text-sm text-primary font-bold hover:underline" href="#">Edit</a>
+</div>
+<p class="text-xs text-gray-500 mt-1 break-all">linkedin.com/in/alex-doe-12345</p>
+</div>
+<div class="bg-white rounded-lg p-4 border border-gray-200 text-center">
+<p class="text-xs text-gray-400 text-right">Promoted</p>
+<h3 class="font-bold text-gray-900 mt-2">Unlock Your Potential</h3>
+<p class="text-sm text-gray-600 mt-1">Upgrade to Premium for exclusive insights and tools to advance your career.</p>
+<button class="w-full mt-4 bg-primary/20 text-primary font-bold py-2 px-4 rounded-full text-sm hover:bg-primary/30">Try Premium for Free</button>
+</div>
+<div class="bg-white rounded-lg p-6 border border-gray-200">
+<h2 class="text-gray-900 text-xl font-bold">People also viewed</h2>
+<div class="flex flex-col gap-4 mt-4">
+<div class="flex items-start gap-3">
+<div class="w-12 h-12 rounded-full bg-cover bg-center flex-shrink-0" data-alt="Profile picture of Jane Smith" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDBxP3J9PD2dPBzRaA-3oInhJpS7XHhNl8EgT1_ckRZ0bgELD1hcqo5nt0qkduJHMd7M__HWGeKgkdsAeAxx7tF6CSJikR0Cm17xe083cuEn2QSxWJO2y7CAxQM-Diq3d8OVJ68hsuMwCGHwVJzrvPEJBMS5qYHd19a1c5ZyDDcv1rLBreVZTI8uNFQZ-1EAHJPRp48Fq6G0moXnaNUTdRK6TISll8Xyk0QlIBqkLIEuP2AIiDFFtAIWLKZyKJZTmjXCGUfahnPM82A')"></div>
+<div>
+<h4 class="font-bold text-gray-900">Jane Smith</h4>
+<p class="text-sm text-gray-600">Engineering Manager at Innovate Corp</p>
+<button class="mt-2 text-sm border border-gray-400 text-gray-600 font-bold py-1 px-3 rounded-full hover:bg-gray-100">Connect</button>
+</div>
+</div>
+<div class="flex items-start gap-3">
+<div class="w-12 h-12 rounded-full bg-cover bg-center flex-shrink-0" data-alt="Profile picture of John Appleseed" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC5-iD7XrVaxI8F2-BNUEQYgjZp8zbG06bXqAiqg0rRY_pblUWAT2C_KeO1qaHpdlK-TKqXJeNe8BuzEUzvfwsX_zplKhj2NvABzbW5mcP1f9uHW74xsaK6TBHjc38hWCi7wT9Ll1iNeykS2VPhxhSdV40B8V7LlL90pTfnje0dQaD9E8CAO0j9d5ujYbP1U7cWxBayLL2TNYj_3ThnBIjMGlK8SLC8zzrDauszW8ygq1_Bfob-y-7LF_2m8nZFe_7sNAXKjIGjZLND')"></div>
+<div>
+<h4 class="font-bold text-gray-900">John Appleseed</h4>
+<p class="text-sm text-gray-600">UX Designer at Creative Minds Studio</p>
+<button class="mt-2 text-sm border border-gray-400 text-gray-600 font-bold py-1 px-3 rounded-full hover:bg-gray-100">Connect</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>
