@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>IOMP Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet"/>
+<script>tailwind.config = {theme: {extend: {colors: {"iomp-blue": {dark: "#1e3a8a", light: "#3b82f6"}, "custom-bg": "#f0f2f5", primary: "#135bec", "background-light": "#f6f6f8", "background-dark": "#101622"}, fontFamily: {sans: ["Inter", "sans-serif"], display: "Lexend"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}}}};</script>
+</head>
+<body class="bg-custom-bg font-sans text-gray-800">
+<div class="flex h-screen" data-purpose="MainApplicationContainer">
+<aside class="fixed top-0 left-0 h-full w-64 bg-white border-r border-gray-200 shadow-sm z-30" data-purpose="ApplicationSidebar">
+<div class="flex items-center justify-start h-16 px-6 border-b border-gray-200">
+<img alt="IOMP Logo" class="h-8 w-8 mr-2" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpNgKz4FHiL2AFewQ3V6xxbV8Uu1Trzysz5eop_WBfIQuyf3VT7Sbe89X_NP3SyxrUsFiC4LvJ93vOVF-8cbwiEJdx2guK4s8HabF4cDLopHmKVq60XDosl8Oc-Owu4JIawic0pGEbbutN862uqb1AtsxDVTCpzY3SAKBEJLL9j0zzAH1bqn00PTvBsmaptS9DCEngHtvUiwqTB_eNvA0K4gy3XDVFSqqjpAatG7mRO_8EOYj3rzySdgoi61oTb_4IlsZ53FrMUiKI"/>
+<span class="text-2xl font-bold text-gray-800">IOMP</span>
+</div>
+<nav class="mt-6" data-purpose="PrimaryNavigation">
+<ul>
+<li>
+<a class="flex items-center px-6 py-3 text-white bg-iomp-blue-dark rounded-r-full mr-4" href="#">
+<i class="fa-solid fa-house w-6 h-6 mr-3"></i>
+<span class="font-semibold">Home</span>
+</a>
+</li>
+<li>
+<a class="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-r-full mr-4" href="#">
+<i class="fa-solid fa-user w-6 h-6 mr-3"></i>
+<span>Profile</span>
+</a>
+</li>
+<li>
+<a class="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-r-full mr-4" href="#">
+<i class="fa-solid fa-users w-6 h-6 mr-3"></i>
+<span>Classrooms</span>
+</a>
+</li>
+<li>
+<a class="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-r-full mr-4" href="#">
+<i class="fa-solid fa-calendar-days w-6 h-6 mr-3"></i>
+<span>Events Calendar</span>
+</a>
+</li>
+<li>
+<a class="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-r-full mr-4" href="#">
+<i class="fa-solid fa-inbox w-6 h-6 mr-3"></i>
+<span>Inbox</span>
+</a>
+</li>
+</ul>
+</nav>
+</aside>
+<div class="w-64 flex-shrink-0" data-purpose="SidebarOffset"></div>
+<div class="flex-1 flex flex-col" data-purpose="MainContentWrapper">
+<header class="sticky top-0 bg-white border-b border-gray-200 h-16 flex items-center justify-between px-6 z-20" data-purpose="ApplicationHeader">
+<div class="flex items-center">
+<button class="text-gray-500 hover:text-gray-800 mr-4 -ml-2 p-2 rounded-full hover:bg-gray-100">
+<i class="fa-solid fa-bars text-xl"></i>
+</button>
+<div class="w-72">
+<input class="w-full bg-gray-100 border-gray-200 rounded-lg focus:ring-iomp-blue-light focus:border-iomp-blue-light" placeholder="Search..." type="search"/>
+</div>
+</div>
+<div class="flex items-center space-x-5">
+<button class="text-gray-500 hover:text-gray-800">
+<svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+</svg>
+</button>
+<button class="relative text-gray-500 hover:text-gray-800">
+<i class="fa-solid fa-bell text-xl"></i>
+<span class="absolute -top-1 -right-1 flex h-4 w-4">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-4 w-4 bg-red-500 border-2 border-white"></span>
+</span>
+</button>
+<img alt="User Avatar" class="h-9 w-9 rounded-full object-cover cursor-pointer" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJ7alwZ4VtU9QjSG7VKafpieuWwNgPDgp2Y4KxAjlKwzhLF9QwtgPuE_RxEueIXjzAiJU3DrN2mg8myDX5Rfxgw2ifFs1p5OCij9LY2ZGhTKIh0kYMHHC3Mtg1ufz4cR_l1c73jMMIalIAWIrN_SQWZVBn-C9kHQB0yE-qHi9Fo1cK2mGRyJk9nbq4IFvGPJGk4WnaxiN08atgc4Ee_rrBwEKGkl90Fub5d2GJsgmGbs3F0VpIEi4oxFCGFJO761a2Q4R5x811WzyZ"/>
+</div>
+</header>
+<main class="flex-1 p-6 overflow-y-auto" data-purpose="ScrollableContent">
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+<div class="xl:col-span-2 flex flex-col gap-6">
+<section class="bg-white rounded-lg shadow-sm p-6" data-purpose="UpcomingEventsCard">
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-xl font-bold text-gray-800">Upcoming Events</h2>
+<a class="text-sm font-semibold text-iomp-blue-light hover:underline" href="#">View all</a>
+</div>
+<div class="relative">
+<div class="flex space-x-4 overflow-x-auto pb-2 -mb-2">
+<article class="flex-shrink-0 w-64 bg-white border border-gray-200 rounded-lg">
+<img alt="Annual Tech &amp; Culture Fest 2024" class="rounded-t-lg w-full h-32 object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYu9XGeHMD2jNVeKDeEbeN3IwcLgRIGoN3ttsLOfOIH0UqlIhUZkn5E6s0UOPMvF4wyHZaDfFpkbzSh1fWEnl4_P8N3hu3bVfKRSIwifQUg9VKWrYdXkZNADvY7m9s-sKv5hPg2Cdhj5E9VTpu_WBlahgLu2oMywyvMsuiIaHriCn4T1AtZku0TcA13xtPlzUcEl7ZiRXIgQFRqhyn9QBQgYVWe1Jcuu0Uxl79w9F-Z5UN9r4Q33v2bo9A0-_ELwdlXuizzk4CSRfA"/>
+<div class="p-4">
+<h3 class="font-bold text-gray-900">Annual Tech &amp; Culture Fest 2024</h3>
+<p class="text-sm text-gray-500 mt-1">Jun 23, 2024 - 2024</p>
+<div class="flex items-center text-sm text-gray-500 mt-2">
+<i class="fa-regular fa-clock mr-2"></i>
+<span>3 pm, 1 site ago</span>
+</div>
+</div>
+</article>
+<article class="flex-shrink-0 w-64 bg-white border border-gray-200 rounded-lg">
+<img alt="Guest Lecture: Future of AI" class="rounded-t-lg w-full h-32 object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0qheSAbfbQYAtcoLYu43FJup1xQLWQITkXvE1jq0pN_gdQsIafEc9NMjUGEKAo8emdKF6zXBMQaJsARANtWx3-xHcEJAJzVdkrrx1yBQlCP5QfwLFLqIH4LzBfithvRglN_s_mels9kdnTgvoOZNca5r5lJQ_znCmdV3elJ-V9FLRoDlmb1kr1o1TFKzpXKAFtSdtOq8VEdtabNdjS8nHsF2vo_JG_vrkh0I1yMZyMIBqqx9LqLicH9JF4fHFk3O7OMIIuIL2tp_a"/>
+<div class="p-4">
+<h3 class="font-bold text-gray-900">Guest Lecture: Future of AI</h3>
+<p class="text-sm text-gray-500 mt-1">Jun 23, 2024 - 2024</p>
+<div class="flex items-center text-sm text-gray-500 mt-2">
+<i class="fa-regular fa-clock mr-2"></i>
+<span>1 p.m, 1 site ago</span>
+</div>
+</div>
+</article>
+<article class="flex-shrink-0 w-64 bg-white border border-gray-200 rounded-lg">
+<img alt="Campus Job Fair" class="rounded-t-lg w-full h-32 object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJvc4P53qFJsWGDnts3G-_2IdUO5Rgst98xZlOsLfBimIS5sTKWJeK0ugnlP65VyqOWvUEKW6MjQvz_Av9LAoH4V6BUj1vZwbJ9cegeBtFjiiZWNZzZU2V003RSSaoaOTtsCj0pbpd6k8-yGm8Q7M70JhjAKDhXBywLw0eqAP1HG02piJ6YXf1y5YOMy2nYVBUQPBypDvQ692Z4C38-h6StUYOCN5dKqNGI-Z3Wnc11oKjIrWpqBo44btFSK30yb6Tz1Fm8ramv02O"/>
+<div class="p-4">
+<h3 class="font-bold text-gray-900">Campus Job Fair</h3>
+<p class="text-sm text-gray-500 mt-1">Jun 28, 2024 - 2024</p>
+<div class="flex items-center text-sm text-gray-500 mt-2">
+<i class="fa-regular fa-clock mr-2"></i>
+<span>1 min, 3 site ago</span>
+</div>
+</div>
+</article>
+</div>
+<button class="absolute top-1/2 -right-4 -translate-y-1/2 bg-white rounded-full h-8 w-8 flex items-center justify-center shadow-md border border-gray-200 hover:bg-gray-100">
+<i class="fa-solid fa-chevron-right text-gray-600"></i>
+</button>
+</div>
+</section>
+<section class="bg-white rounded-lg shadow-sm p-4" data-purpose="CreatePostCard">
+<div class="flex items-center space-x-4">
+<img alt="User Avatar for Posting" class="h-10 w-10 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrBfn6inmCbrAT_gkzLnVpziEy4JYAwXF1ZuzRUTD1beGBezett5ZmPrup_RSPyT1bqFlOUuzf9p7tE4Zj-YlmSiirezTbS4EpNx57osTr2e3mgkUfd05Dzp1gdTj4m-BIZW32HRFpVZsB2Ti5UoiYsXdsKvNSMmawKxksEp6Mq9SkUwc_qT1hU5bk8rlPPfoxvghOmCrj6GYBqBr0LX5-YEOCvqfjshUBy6OSbkrmHdNjkSdrAF8IhAC7Xvh9foZ2WojLSo3-zbM5"/>
+<input class="flex-1 bg-gray-100 border-gray-200 rounded-full focus:ring-iomp-blue-light focus:border-iomp-blue-light" placeholder="Start a post..." type="text"/>
+</div>
+</section>
+<div class="flex flex-col gap-6" data-purpose="SocialFeedContainer">
+<article class="bg-white rounded-lg shadow-sm p-5" data-purpose="Post">
+<div class="flex justify-between items-start">
+<div class="flex items-center space-x-3">
+<img alt="Dr. A. Sharma Avatar" class="h-11 w-11 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBTqjUCR3IAMXJM16Dpe_s1QVSUq7HjuChgv8Pz3G5LwIhWW6S6OU5Iwq1-hX5V4N52BG3ZEOMwr7VuvV9el0k_etk2T5GH_gGlN9xT-jH40jezVLQ-iCTxSSsPYEvvif_BL34hgHdiYz4t6ZMxMPrxJc9tiRf8C3CewtPR3mIXH_SrRMsBNDOrMDn7sL8FYyS7JnDCDq3H2tzIauNoHT18iib0HAiNKWZrVPlumSKOzPtO4q--Dt9f8WiXkAqM1aO0JAp1gPsdmwH4"/>
+<div>
+<h4 class="font-semibold text-gray-900">Dr. A. Sharma</h4>
+<p class="text-xs text-gray-500">21 minutes ago · <i class="fa-solid fa-earth-americas"></i></p>
+</div>
+</div>
+<button class="text-gray-500 hover:text-gray-800"><i class="fa-solid fa-ellipsis"></i></button>
+</div>
+<p class="mt-4 text-gray-700 leading-relaxed">
+                  We have invited to cootalze a new research project to wnarde a new research project, but instingrane growing of alone. This campaigns will desiign that har been an essential project it a kind code... <a class="text-iomp-blue-light font-semibold hover:underline" href="#">Read more</a>
+</p>
+<div class="flex justify-between items-center mt-4 text-sm text-gray-500">
+<div class="flex items-center space-x-1">
+<span class="flex items-center justify-center h-5 w-5 rounded-full bg-blue-500 text-white text-xs"><i class="fa-solid fa-thumbs-up"></i></span>
+<span>13K</span>
+</div>
+<span>12 comments</span>
+</div>
+<div class="border-t border-gray-200 mt-3 pt-2 flex justify-around text-gray-600 font-semibold">
+<button class="flex-1 py-2 rounded-lg hover:bg-gray-100"><i class="fa-regular fa-thumbs-up mr-2"></i>Like</button>
+<button class="flex-1 py-2 rounded-lg hover:bg-gray-100"><i class="fa-regular fa-comment mr-2"></i>Comt</button>
+<button class="flex-1 py-2 rounded-lg hover:bg-gray-100"><i class="fa-solid fa-share mr-2"></i>Share</button>
+</div>
+</article>
+<article class="bg-white rounded-lg shadow-sm p-5" data-purpose="Post">
+<div class="flex justify-between items-start">
+<div class="flex items-center space-x-3">
+<img alt="Student Council Avatar" class="h-11 w-11 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA0Ub0hdAgaucklQ1Sg8ILUquljcRkFdgJOgk0jbU-CEu5foQI9KhGTdZk9ASmEFO7-rtGDKbRXhE5uLx8DMTYU156WR3XS2L25gw3h-IW0eGl4z-xiZvj1YxZENQHSiAfDO5gog0mr-0E6H_1xJkOPakozX5EYcs9b-BSjvpcaJ6G_BudR9_4Q0rGzsYjKtGg33NeRIRsvZvPWX9CYeg_KZ_XYmrARiDL2eHxsZF0D0wJXhygATYYHTEiataNrz2P2bXm8ZwSs-m3g"/>
+<div>
+<h4 class="font-semibold text-gray-900">Student Council</h4>
+<p class="text-xs text-gray-500">7 hours ago · <i class="fa-solid fa-earth-americas"></i></p>
+</div>
+</div>
+<button class="text-gray-500 hover:text-gray-800"><i class="fa-solid fa-ellipsis"></i></button>
+</div>
+<p class="mt-4 text-gray-700 leading-relaxed">
+                  Another post goes here with some example text to fill up the space... <a class="text-iomp-blue-light font-semibold hover:underline" href="#">Read more</a>
+</p>
+<div class="border-t border-gray-200 mt-3 pt-2 flex justify-around text-gray-600 font-semibold">
+<button class="flex-1 py-2 rounded-lg hover:bg-gray-100"><i class="fa-regular fa-thumbs-up mr-2"></i>Like</button>
+<button class="flex-1 py-2 rounded-lg hover:bg-gray-100"><i class="fa-regular fa-comment mr-2"></i>Comt</button>
+<button class="flex-1 py-2 rounded-lg hover:bg-gray-100"><i class="fa-solid fa-share mr-2"></i>Share</button>
+</div>
+</article>
+<article class="bg-white rounded-lg shadow-sm p-5" data-purpose="Post">
+<div class="flex justify-between items-start">
+<div class="flex items-center space-x-3">
+<img alt="Rahul K. Avatar" class="h-11 w-11 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGGg9bth-zeVA8mqYu2_QLnBb7nsUZUbIammLfgTT4LrJRFwmn21ex_LGfhj1RsWuSYQIBsHb0GIPPNowLr6aFMdkkJalw9jR9GY4_YJtHXqkmmIJXtdM_IHn6U-fWMbl_C4np_e45aP1ns-fTFh8ja9SRCTYrQOLoOBlKFl4eo3ftjJGQZn4n7vTu2c5hcpw3lxasm0gNidaFZNuF5ynJUPCRbIb-LywGZ1Jm4Fs9XaVr032TQtvdYgZ0GcZXNIQgigvvFBIAEmdq"/>
+<div>
+<h4 class="font-semibold text-gray-900">Rahul K.</h4>
+<p class="text-xs text-gray-500">23 hours ago · <i class="fa-solid fa-earth-americas"></i></p>
+</div>
+</div>
+<button class="text-gray-500 hover:text-gray-800"><i class="fa-regular fa-thumbs-up mr-2"></i>Like</button>
+</div>
+<p class="mt-4 text-gray-700 leading-relaxed">
+                  Weal, Hestredi experience so we are nsirnent to north ewhema yout of a Hackathon and undiesses prosesing aower only nipreaming Rncko. Hackathon and we found on randew colleges edgied compostion or the site other... <a class="text-iomp-blue-light font-semibold hover:underline" href="#">Read more</a>
+</p>
+<div class="border-t border-gray-200 mt-3 pt-2 flex justify-around text-gray-600 font-semibold text-sm">
+<button class="flex-1 py-2 rounded-lg hover:bg-gray-100"><i class="fa-regular fa-thumbs-up mr-2"></i>Like</button>
+<button class="flex-1 py-2 rounded-lg hover:bg-gray-100"><i class="fa-regular fa-comment mr-2"></i>Comment</button>
+<button class="flex-1 py-2 rounded-lg hover:bg-gray-100"><i class="fa-solid fa-share mr-2"></i>Share</button>
+</div>
+</article>
+<article class="bg-white rounded-lg shadow-sm p-5" data-purpose="Post">
+<div class="flex justify-between items-start">
+<div class="flex items-center space-x-3">
+<img alt="Student Council Avatar" class="h-11 w-11 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDmBXA5oYhef7HicXPM7bhRuBM2cBXhRkaGM5vty8QhIG2GzAtEze9oNgZElOF6qRvuLckv8E0l72gnpRAop1oP75WQyOpjPOUQfwALkE4tPNFR_P-Q--axWSu8eJ0TWjitDP4In44FX6Bzwa2GWJFRsoc8YEIZtjOolhoaM29X3KJC-RzTWgs4srOokkhdErOle3DJPJO9TdgYivVAO9Dhi3TK5yWW9tbX7Cfo10nTllWbT9i5HXXD9l68xmmgRJO565NzEm7uKh3"/>
+<div>
+<h4 class="font-semibold text-gray-900">Student Council</h4>
+<p class="text-xs text-gray-500">25 hours ago · <i class="fa-solid fa-earth-americas"></i></p>
+</div>
+</div>
+<button class="text-gray-500 hover:text-gray-800"><i class="fa-regular fa-thumbs-up mr-2"></i>Like</button>
+</div>
+<p class="mt-4 text-gray-700 leading-relaxed">
+                  Our recent protected the Student Council in a recent event will evalusing our incapnment of extample aitten action sanrep to melch ... <a class="text-iomp-blue-light font-semibold hover:underline" href="#">Read more</a>
+</p>
+<div class="border-t border-gray-200 mt-3 pt-2 flex justify-around text-gray-600 font-semibold text-sm">
+<button class="flex-1 py-2 rounded-lg hover:bg-gray-100"><i class="fa-regular fa-thumbs-up mr-2"></i>Like</button>
+<button class="flex-1 py-2 rounded-lg hover:bg-gray-100"><i class="fa-regular fa-comment mr-2"></i>Comment</button>
+<button class="flex-1 py-2 rounded-lg hover:bg-gray-100"><i class="fa-solid fa-share mr-2"></i>Share</button>
+</div>
+</article>
+</div>
+</div>
+<div class="xl:col-span-1 flex flex-col gap-6">
+<section class="bg-white rounded-lg shadow-sm p-6 relative" data-purpose="AnnouncementsCard">
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-xl font-bold text-gray-800">Important Announcements</h2>
+<a class="text-sm font-semibold text-iomp-blue-light hover:underline" href="#">View all</a>
+</div>
+<div class="space-y-3">
+<div class="bg-red-100 border-l-4 border-red-500 p-3 rounded-r-lg flex items-start space-x-3">
+<div class="flex-shrink-0 bg-red-200 h-6 w-6 rounded-full flex items-center justify-center">
+<i class="fa-solid fa-triangle-exclamation text-red-600 text-sm"></i>
+</div>
+<div>
+<h3 class="font-semibold text-red-800">Final Exam Schedule Released</h3>
+<p class="text-sm text-red-700">Final Exam Schedule Released on an af June 20th.</p>
+</div>
+</div>
+<div class="bg-red-100 border-l-4 border-red-500 p-3 rounded-r-lg flex items-start space-x-3">
+<div class="flex-shrink-0 bg-red-200 h-6 w-6 rounded-full flex items-center justify-center">
+<i class="fa-solid fa-triangle-exclamation text-red-600 text-sm"></i>
+</div>
+<div>
+<h3 class="font-semibold text-red-800">Spring Admissions Deadline Extended</h3>
+<p class="text-sm text-red-700">Spring Admissions Deadline Extendert on november 14, 2024.</p>
+</div>
+</div>
+<div class="bg-yellow-100 border-l-4 border-yellow-500 p-3 rounded-r-lg flex items-start space-x-3">
+<div class="flex-shrink-0 bg-yellow-200 h-6 w-6 rounded-full flex items-center justify-center">
+<i class="fa-solid fa-triangle-exclamation text-yellow-600 text-sm"></i>
+</div>
+<div>
+<h3 class="font-semibold text-yellow-800">Campus Wi-Fi Maintenance</h3>
+<p class="text-sm text-yellow-700">Campus Wi-Fi Maintenance will be snt on requirements.</p>
+</div>
+</div>
+</div>
+<div class="absolute top-24 right-2 h-40 w-1 bg-gray-200 rounded-full">
+<div class="w-full h-1/2 bg-gray-400 rounded-full"></div>
+</div>
+</section>
+</div>
+</div>
+</main>
+</div>
+</div>
+</body></html>
