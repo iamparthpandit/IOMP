@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Login and Signup Page</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#1DB954",
+            "background-light": "#FFFFFF",
+            "background-dark": "#121212",
+          },
+          fontFamily: {
+            display: ["Montserrat", "sans-serif"],
+          },
+          borderRadius: {
+            DEFAULT: "1.875rem", // 30px
+          },
+        },
+      },
+    };
+  </script>
+<style>::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background-color: #4a4a4a;
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background-color: #6a6a6a;
+    }
+  </style>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-gray-900 dark:text-white antialiased">
+<div class="min-h-screen flex items-center justify-center p-4">
+<div class="w-full max-w-md">
+<header class="flex justify-center mb-8">
+<svg class="h-10 w-10 text-gray-900 dark:text-white" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-2.5-12.5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm5 0c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm-2.5 7c-1.38 0-2.5 1.12-2.5 2.5s1.12 2.5 2.5 2.5 2.5-1.12 2.5-2.5-1.12-2.5-2.5-2.5z"></path>
+<title>Company Logo</title>
+</svg>
+</header>
+<main class="bg-background-light dark:bg-background-dark rounded-lg px-4 sm:px-8 py-8">
+<h1 class="text-4xl sm:text-5xl font-bold text-center mb-8">Welcome back</h1>
+<form class="space-y-6">
+<div>
+<label class="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-200" for="email">Email or username</label>
+<input class="w-full p-4 bg-background-light dark:bg-background-dark border border-gray-400 dark:border-gray-600 rounded-md text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-primary focus:border-transparent transition" id="email" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-200" for="password">Password</label>
+<input class="w-full p-4 bg-background-light dark:bg-background-dark border border-gray-400 dark:border-gray-600 rounded-md text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-primary focus:border-transparent transition" id="password" type="password"/>
+</div>
+<button class="w-full bg-primary text-black font-bold py-4 rounded-full hover:scale-105 transform transition duration-200" type="submit">
+            Continue
+          </button>
+</form>
+<div class="border-t border-gray-300 dark:border-gray-700 my-8"></div>
+<div class="text-center">
+<p class="text-gray-500 dark:text-gray-400">Don't have an account?</p>
+<a class="font-bold text-gray-700 dark:text-white underline hover:text-primary dark:hover:text-primary transition mt-2 inline-block" href="#">Sign up</a>
+</div>
+</main>
+</div>
+</div>
+</body></html>
