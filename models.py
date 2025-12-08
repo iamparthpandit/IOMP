@@ -1,12 +1,10 @@
 from datetime import datetime
+from flask_sqlalchemy import SQLAlchemy
+from flask_bcrypt import Bcrypt
 
-# Import db and bcrypt from app module
-# This works because app.py imports models AFTER initializing db and bcrypt
-def init_model():
-    from app import db, bcrypt
-    return db, bcrypt
-
-db, bcrypt = init_model()
+# Create instances that will be initialized by app
+db = SQLAlchemy()
+bcrypt = Bcrypt()
 
 class User(db.Model):
     __tablename__ = 'users'

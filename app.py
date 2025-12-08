@@ -1,6 +1,4 @@
 from flask import Flask, request, jsonify, send_from_directory
-from flask_sqlalchemy import SQLAlchemy
-from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from flask_cors import CORS
 from datetime import timedelta
@@ -19,14 +17,16 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', 'jwt-secret-key-change-in-production')
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=7)
 
-# Initialize extensions
-db = SQLAlchemy(app)
-bcrypt = Bcrypt(app)
+# Import db and bcrypt from models and initialize with app
+from models import db, bcrypt
+
+# Initialize extensions with app
+db.init_app(app)
+bcrypt.init_app(app)
 jwt = JWTManager(app)
 CORS(app)
 
-# Import models and routes (after initializing db and bcrypt)
-import models
+# Import routes after app initialization
 from routes import auth_bp
 
 # Register blueprints
@@ -37,9 +37,22 @@ app.register_blueprint(auth_bp, url_prefix='/api/auth')
 def index():
     return send_from_directory('.', 'index.html')
 
+@app.route('/login')
+def login_page():
+    return send_from_directory('.', 'login.html')
+
 @app.route('/profile')
 def profile_page():
     return send_from_directory('.', 'profile.html')
+
+@app.route('/events')
+def events_page():
+    return send_from_directory('.', 'events.html')
+
+# Serve static files (CSS, JS, images)
+@app.route('/<path:path>')
+def serve_static(path):
+    return send_from_directory('.', path)
 
 # Create database tables
 with app.app_context():

@@ -25,8 +25,6 @@ def login():
         email = data.get('email', '').strip().lower()
         password = data.get('password', '')
         
-        print(f"Login attempt - Email: {email}")  # Debug
-        
         # Validate fields
         errors = []
         if not email:
@@ -44,18 +42,7 @@ def login():
         
         # Find user
         user = User.query.filter_by(email=email).first()
-        print(f"User found: {user is not None}")  # Debug
-        
-        if not user:
-            return jsonify({
-                'success': False,
-                'message': 'Invalid email or password'
-            }), 401
-        
-        password_valid = user.check_password(password)
-        print(f"Password valid: {password_valid}")  # Debug
-        
-        if not password_valid:
+        if not user or not user.check_password(password):
             return jsonify({
                 'success': False,
                 'message': 'Invalid email or password'
@@ -72,9 +59,7 @@ def login():
         }), 200
         
     except Exception as e:
-        import traceback
         print(f'Login error: {str(e)}')
-        print(traceback.format_exc())
         return jsonify({
             'success': False,
             'message': 'Server error during login'
@@ -87,25 +72,6 @@ def get_current_user():
     try:
         user_id = get_jwt_identity()
         user = User.query.get(user_id)
-        
-        if not user:
-            return jsonify({
-                'success': False,
-                'message': 'User not found'
-            }), 404
-        
-        return jsonify({
-            'success': True,
-            'user': user.to_dict()
-        }), 200
-        
-    except Exception as e:
-        print(f'Auth error: {str(e)}')
-        return jsonify({
-            'success': False,
-            'message': 'Not authorized'
-        }), 401
-
         
         if not user:
             return jsonify({

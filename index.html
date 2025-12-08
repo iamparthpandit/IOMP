@@ -7,24 +7,102 @@
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet"/>
 <script>tailwind.config = {theme: {extend: {colors: {"iomp-blue": {dark: "#1e3a8a", light: "#3b82f6"}, "custom-bg": "#f0f2f5", primary: "#135bec", "background-light": "#f6f6f8", "background-dark": "#101622"}, fontFamily: {sans: ["Inter", "sans-serif"], display: "Lexend"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}}}};</script>
+<style>
+  /* Mobile-first responsive styles */
+  @media (max-width: 1024px) {
+    .sidebar-mobile {
+      transform: translateX(-100%);
+      transition: transform 0.3s ease-in-out;
+    }
+    .sidebar-mobile.active {
+      transform: translateX(0);
+    }
+  }
+  
+  /* Profile Dropdown Styles */
+  .profile-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 8px;
+    width: 350px;
+    background: #2d3748;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+    color: white;
+  }
+  
+  .profile-dropdown.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  
+  .profile-dropdown-item {
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    border-radius: 8px;
+    margin: 4px 8px;
+  }
+  
+  .profile-dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+  
+  .profile-dropdown-section {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 8px 0;
+  }
+  
+  .profile-dropdown-header {
+    padding: 20px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .profile-avatar-large {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin: 0 auto 12px;
+    object-fit: cover;
+  }
+</style>
 </head>
 <body class="bg-custom-bg font-sans text-gray-800">
+<!-- Mobile Sidebar Overlay -->
+<div id="sidebarOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden lg:hidden"></div>
+
 <div class="flex h-screen" data-purpose="MainApplicationContainer">
-<aside class="fixed top-0 left-0 h-full w-64 bg-white border-r border-gray-200 shadow-sm z-30" data-purpose="ApplicationSidebar">
-<div class="flex items-center justify-start h-16 px-6 border-b border-gray-200">
+<aside class="sidebar-mobile fixed top-0 left-0 h-full w-64 bg-white border-r border-gray-200 shadow-sm z-50 lg:z-30 lg:transform-none" data-purpose="ApplicationSidebar">
+<div class="flex items-center justify-between h-16 px-6 border-b border-gray-200">
+<div class="flex items-center">
 <img alt="IOMP Logo" class="h-8 w-8 mr-2" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpNgKz4FHiL2AFewQ3V6xxbV8Uu1Trzysz5eop_WBfIQuyf3VT7Sbe89X_NP3SyxrUsFiC4LvJ93vOVF-8cbwiEJdx2guK4s8HabF4cDLopHmKVq60XDosl8Oc-Owu4JIawic0pGEbbutN862uqb1AtsxDVTCpzY3SAKBEJLL9j0zzAH1bqn00PTvBsmaptS9DCEngHtvUiwqTB_eNvA0K4gy3XDVFSqqjpAatG7mRO_8EOYj3rzySdgoi61oTb_4IlsZ53FrMUiKI"/>
 <span class="text-2xl font-bold text-gray-800">IOMP</span>
+</div>
+<button id="closeSidebar" class="lg:hidden text-gray-600 hover:text-gray-900">
+<i class="fas fa-times text-xl"></i>
+</button>
 </div>
 <nav class="mt-6" data-purpose="PrimaryNavigation">
 <ul>
 <li>
-<a class="flex items-center px-6 py-3 text-white bg-iomp-blue-dark rounded-r-full mr-4" href="#">
+<a class="flex items-center px-6 py-3 text-white bg-iomp-blue-dark rounded-r-full mr-4" href="/">
 <i class="fa-solid fa-house w-6 h-6 mr-3"></i>
 <span class="font-semibold">Home</span>
 </a>
 </li>
 <li>
-<a class="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-r-full mr-4" href="#">
+<a class="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-r-full mr-4" href="/profile">
 <i class="fa-solid fa-user w-6 h-6 mr-3"></i>
 <span>Profile</span>
 </a>
@@ -47,44 +125,112 @@
 <span>Inbox</span>
 </a>
 </li>
+<li class="mt-4 border-t border-gray-200 pt-4">
+<button id="logoutBtn" class="flex items-center w-full px-6 py-3 text-red-600 hover:bg-red-50 hover:text-red-700 rounded-r-full mr-4 transition">
+<i class="fa-solid fa-right-from-bracket w-6 h-6 mr-3"></i>
+<span>Logout</span>
+</button>
+</li>
 </ul>
 </nav>
+<!-- User Info Section -->
+<div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 bg-gray-50">
+<div class="flex items-center space-x-3">
+<img id="userAvatar" alt="User Avatar" class="h-10 w-10 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJ7alwZ4VtU9QjSG7VKafpieuWwNgPDgp2Y4KxAjlKwzhLF9QwtgPuE_RxEueIXjzAiJU3DrN2mg8myDX5Rfxgw2ifFs1p5OCij9LY2ZGhTKIh0kYMHHC3Mtg1ufz4cR_l1c73jMMIalIAWIrN_SQWZVBn-C9kHQB0yE-qHi9Fo1cK2mGRyJk9nbq4IFvGPJGk4WnaxiN08atgc4Ee_rrBwEKGkl90Fub5d2GJsgmGbs3F0VpIEi4oxFCGFJO761a2Q4R5x811WzyZ"/>
+<div class="flex-1 min-w-0">
+<p id="userName" class="text-sm font-semibold text-gray-900 truncate">Loading...</p>
+<p id="userRole" class="text-xs text-gray-500 truncate">Loading...</p>
+</div>
+</div>
+</div>
 </aside>
-<div class="w-64 flex-shrink-0" data-purpose="SidebarOffset"></div>
+<div class="hidden lg:block w-64 flex-shrink-0" data-purpose="SidebarOffset"></div>
 <div class="flex-1 flex flex-col" data-purpose="MainContentWrapper">
-<header class="sticky top-0 bg-white border-b border-gray-200 h-16 flex items-center justify-between px-6 z-20" data-purpose="ApplicationHeader">
-<div class="flex items-center">
-<button class="text-gray-500 hover:text-gray-800 mr-4 -ml-2 p-2 rounded-full hover:bg-gray-100">
+<header class="sticky top-0 bg-white border-b border-gray-200 h-16 flex items-center justify-between px-4 sm:px-6 z-20" data-purpose="ApplicationHeader">
+<div class="flex items-center flex-1">
+<button id="menuToggle" class="lg:hidden text-gray-500 hover:text-gray-800 mr-4 p-2 rounded-full hover:bg-gray-100">
 <i class="fa-solid fa-bars text-xl"></i>
 </button>
-<div class="w-72">
-<input class="w-full bg-gray-100 border-gray-200 rounded-lg focus:ring-iomp-blue-light focus:border-iomp-blue-light" placeholder="Search..." type="search"/>
+<div class="hidden sm:block w-full max-w-xs lg:max-w-md">
+<input class="w-full bg-gray-100 border-gray-200 rounded-lg focus:ring-iomp-blue-light focus:border-iomp-blue-light text-sm" placeholder="Search..." type="search"/>
 </div>
 </div>
-<div class="flex items-center space-x-5">
-<button class="text-gray-500 hover:text-gray-800">
-<svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<div class="flex items-center space-x-3 sm:space-x-5">
+<button class="hidden sm:block text-gray-500 hover:text-gray-800">
+<svg class="h-5 w-5 sm:h-6 sm:w-6" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
 <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
 <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
 </svg>
 </button>
 <button class="relative text-gray-500 hover:text-gray-800">
-<i class="fa-solid fa-bell text-xl"></i>
-<span class="absolute -top-1 -right-1 flex h-4 w-4">
+<i class="fa-solid fa-bell text-lg sm:text-xl"></i>
+<span class="absolute -top-1 -right-1 flex h-3 w-3 sm:h-4 sm:w-4">
 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-<span class="relative inline-flex rounded-full h-4 w-4 bg-red-500 border-2 border-white"></span>
+<span class="relative inline-flex rounded-full h-3 w-3 sm:h-4 sm:w-4 bg-red-500 border-2 border-white"></span>
 </span>
 </button>
-<img alt="User Avatar" class="h-9 w-9 rounded-full object-cover cursor-pointer" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJ7alwZ4VtU9QjSG7VKafpieuWwNgPDgp2Y4KxAjlKwzhLF9QwtgPuE_RxEueIXjzAiJU3DrN2mg8myDX5Rfxgw2ifFs1p5OCij9LY2ZGhTKIh0kYMHHC3Mtg1ufz4cR_l1c73jMMIalIAWIrN_SQWZVBn-C9kHQB0yE-qHi9Fo1cK2mGRyJk9nbq4IFvGPJGk4WnaxiN08atgc4Ee_rrBwEKGkl90Fub5d2GJsgmGbs3F0VpIEi4oxFCGFJO761a2Q4R5x811WzyZ"/>
+<div class="relative">
+<img id="headerUserAvatar" alt="User Avatar" class="h-8 w-8 sm:h-9 sm:w-9 rounded-full object-cover cursor-pointer hover:opacity-80 transition" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJ7alwZ4VtU9QjSG7VKafpieuWwNgPDgp2Y4KxAjlKwzhLF9QwtgPuE_RxEueIXjzAiJU3DrN2mg8myDX5Rfxgw2ifFs1p5OCij9LY2ZGhTKIh0kYMHHC3Mtg1ufz4cR_l1c73jMMIalIAWIrN_SQWZVBn-C9kHQB0yE-qHi9Fo1cK2mGRyJk9nbq4IFvGPJGk4WnaxiN08atgc4Ee_rrBwEKGkl90Fub5d2GJsgmGbs3F0VpIEi4oxFCGFJO761a2Q4R5x811WzyZ"/>
+<!-- Profile Dropdown -->
+<div id="profileDropdown" class="profile-dropdown">
+<div class="profile-dropdown-header">
+<img id="dropdownAvatar" class="profile-avatar-large" src="" alt="Profile Picture">
+<h3 id="dropdownName" class="text-lg font-semibold">User Name</h3>
+<p id="dropdownEmail" class="text-sm text-gray-300 mt-1">user@email.com</p>
+</div>
+<div class="profile-dropdown-section">
+<div class="profile-dropdown-item" onclick="window.location.href='/profile'">
+<i class="fas fa-key text-gray-300 text-lg"></i>
+<span>Profile Settings</span>
+</div>
+<div class="profile-dropdown-item" onclick="alert('Account management coming soon')">
+<i class="fab fa-google text-gray-300 text-lg"></i>
+<span>Manage your Account</span>
+</div>
+<div class="profile-dropdown-item" onclick="window.location.href='/profile'">
+<i class="fas fa-edit text-gray-300 text-lg"></i>
+<span>Customise profile</span>
+</div>
+<div class="profile-dropdown-item">
+<i class="fas fa-sync text-green-400 text-lg"></i>
+<span>Sync is on</span>
+</div>
+</div>
+<div class="profile-dropdown-section">
+<p class="text-xs text-gray-400 px-4 py-2 font-semibold">OTHER PROFILES</p>
+<div id="otherProfilesList"></div>
+<div class="profile-dropdown-item" onclick="alert('Add profile feature coming soon')">
+<i class="fas fa-user-plus text-gray-300 text-lg"></i>
+<span>Add Profile</span>
+</div>
+<div class="profile-dropdown-item" onclick="alert('Guest profile coming soon')">
+<i class="fas fa-user-secret text-gray-300 text-lg"></i>
+<span>Open guest profile</span>
+</div>
+</div>
+<div class="profile-dropdown-section" style="border-bottom: none;">
+<div class="profile-dropdown-item" id="dropdownLogout">
+<i class="fas fa-sign-out-alt text-red-400 text-lg"></i>
+<span class="text-red-400">Sign out</span>
+</div>
+</div>
+</div>
+</div>
 </div>
 </header>
-<main class="flex-1 p-6 overflow-y-auto" data-purpose="ScrollableContent">
-<div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+<main class="flex-1 p-4 sm:p-6 overflow-y-auto" data-purpose="ScrollableContent">
+<!-- Welcome Greeting -->
+<div class="bg-gradient-to-r from-iomp-blue-dark to-iomp-blue-light rounded-lg shadow-sm p-6 mb-6 text-white">
+<h1 class="text-2xl sm:text-3xl font-bold mb-2" id="greetingText">Welcome back!</h1>
+<p class="text-sm sm:text-base opacity-90" id="greetingSubtext">Here's what's happening today</p>
+</div>
+
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-4 sm:gap-6">
 <div class="xl:col-span-2 flex flex-col gap-6">
 <section class="bg-white rounded-lg shadow-sm p-6" data-purpose="UpcomingEventsCard">
 <div class="flex justify-between items-center mb-4">
 <h2 class="text-xl font-bold text-gray-800">Upcoming Events</h2>
-<a class="text-sm font-semibold text-iomp-blue-light hover:underline" href="#">View all</a>
+<a class="text-sm font-semibold text-iomp-blue-light hover:underline cursor-pointer" href="/events">View all →</a>
 </div>
 <div class="relative">
 <div class="flex space-x-4 overflow-x-auto pb-2 -mb-2">
@@ -267,4 +413,182 @@
 </main>
 </div>
 </div>
+
+<script>
+  // Authentication check
+  const token = localStorage.getItem('token');
+  const userStr = localStorage.getItem('user');
+  
+  if (!token || !userStr) {
+    // Redirect to login if not authenticated
+    window.location.href = '/login';
+  } else {
+    // Load user data
+    try {
+      const user = JSON.parse(userStr);
+      
+      // Get time-based greeting
+      function getGreeting() {
+        const hour = new Date().getHours();
+        if (hour < 12) return 'Good Morning';
+        if (hour < 18) return 'Good Afternoon';
+        return 'Good Evening';
+      }
+      
+      // Update personalized greeting
+      const firstName = user.name.split(' ')[0];
+      document.getElementById('greetingText').textContent = `${getGreeting()}, ${firstName}! 👋`;
+      
+      // Update subtext based on role
+      const roleMessages = {
+        'student': 'Ready to learn something new today?',
+        'staff': 'Hope you have a productive day teaching!',
+        'admin': 'Here\'s your dashboard overview'
+      };
+      document.getElementById('greetingSubtext').textContent = roleMessages[user.role] || 'Here\'s what\'s happening today';
+      
+      // Update user info in sidebar
+      document.getElementById('userName').textContent = user.name || 'User';
+      document.getElementById('userRole').textContent = user.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : 'Member';
+      
+      // Update avatars
+      if (user.profile_picture) {
+        document.getElementById('userAvatar').src = user.profile_picture;
+        document.getElementById('headerUserAvatar').src = user.profile_picture;
+      }
+      
+      // Store last login time
+      const lastLogin = localStorage.getItem('lastLoginTime');
+      const currentTime = new Date().toISOString();
+      if (!lastLogin) {
+        localStorage.setItem('lastLoginTime', currentTime);
+      }
+      
+      // Update dashboard with dynamic data
+      updateDashboardStats(user);
+      
+    } catch (error) {
+      console.error('Error parsing user data:', error);
+      window.location.href = '/login';
+    }
+  }
+  
+  // Update dashboard statistics based on user role
+  function updateDashboardStats(user) {
+    // You can add API calls here to fetch real-time data
+    console.log('Dashboard loaded for:', user.name);
+    console.log('User role:', user.role);
+    console.log('Email:', user.email);
+  }
+  
+  // Logout functionality
+  document.getElementById('logoutBtn').addEventListener('click', () => {
+    if (confirm('Are you sure you want to logout?')) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      localStorage.removeItem('lastLoginTime');
+      window.location.href = '/login';
+    }
+  });
+  
+  // Mobile sidebar toggle
+  const menuToggle = document.getElementById('menuToggle');
+  const closeSidebar = document.getElementById('closeSidebar');
+  const sidebar = document.querySelector('.sidebar-mobile');
+  const overlay = document.getElementById('sidebarOverlay');
+  
+  function openSidebar() {
+    sidebar.classList.add('active');
+    overlay.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+  
+  function closeSidebarFn() {
+    sidebar.classList.remove('active');
+    overlay.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+  
+  menuToggle.addEventListener('click', openSidebar);
+  closeSidebar.addEventListener('click', closeSidebarFn);
+  overlay.addEventListener('click', closeSidebarFn);
+  
+  // Close sidebar on window resize to desktop
+  window.addEventListener('resize', () => {
+    if (window.innerWidth >= 1024) {
+      closeSidebarFn();
+    }
+  });
+  
+  // Profile Dropdown Functionality
+  const headerAvatar = document.getElementById('headerUserAvatar');
+  const profileDropdown = document.getElementById('profileDropdown');
+  const dropdownLogout = document.getElementById('dropdownLogout');
+  
+  // Toggle dropdown on avatar click
+  headerAvatar.addEventListener('click', (e) => {
+    e.stopPropagation();
+    profileDropdown.classList.toggle('active');
+    
+    // Populate dropdown with user data
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      const user = JSON.parse(userData);
+      document.getElementById('dropdownAvatar').src = user.profile_picture || headerAvatar.src;
+      document.getElementById('dropdownName').textContent = user.name || 'User';
+      document.getElementById('dropdownEmail').textContent = user.email || 'user@email.com';
+      
+      // Load other profiles from localStorage (simulated)
+      loadOtherProfiles(user);
+    }
+  });
+  
+  // Close dropdown when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!profileDropdown.contains(e.target) && e.target !== headerAvatar) {
+      profileDropdown.classList.remove('active');
+    }
+  });
+  
+  // Logout from dropdown
+  dropdownLogout.addEventListener('click', () => {
+    if (confirm('Are you sure you want to sign out?')) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      localStorage.removeItem('lastLoginTime');
+      window.location.href = '/login';
+    }
+  });
+  
+  // Load other profiles (simulated based on database users)
+  function loadOtherProfiles(currentUser) {
+    const otherProfilesList = document.getElementById('otherProfilesList');
+    
+    // Sample other profiles (you can fetch from API)
+    const otherProfiles = [
+      { name: 'Admin Profile', email: 'admin@techvista.edu', avatar: 'https://ui-avatars.com/api/?name=Admin&background=ef4444&color=fff' },
+      { name: 'Staff Account', email: 'staff@techvista.edu', avatar: 'https://ui-avatars.com/api/?name=Staff&background=3b82f6&color=fff' }
+    ].filter(profile => profile.email !== currentUser.email);
+    
+    otherProfilesList.innerHTML = otherProfiles.map(profile => `
+      <div class="profile-dropdown-item" onclick="switchProfile('${profile.email}')">
+        <img src="${profile.avatar}" class="w-8 h-8 rounded-full" alt="${profile.name}">
+        <div class="flex-1">
+          <div class="text-sm font-medium">${profile.name}</div>
+          <div class="text-xs text-gray-400">${profile.email}</div>
+        </div>
+      </div>
+    `).join('');
+  }
+  
+  // Switch profile function (placeholder)
+  window.switchProfile = function(email) {
+    alert(`Profile switching coming soon! Selected: ${email}`);
+  };
+</script>
+      closeSidebarFn();
+    }
+  });
+</script>
+
 </body></html>

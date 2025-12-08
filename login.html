@@ -2,7 +2,7 @@
 <html lang="en"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Login and Signup Page</title>
+<title>Login - IOMP</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
 <script>
@@ -38,38 +38,197 @@
     ::-webkit-scrollbar-thumb:hover {
       background-color: #6a6a6a;
     }
+    
+    /* Mobile-first responsive styles */
+    @media (max-width: 640px) {
+      body {
+        padding: 1rem;
+      }
+    }
+    
+    /* Toast notification animation */
+    @keyframes slideInDown {
+      from {
+        transform: translateY(-100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+    
+    .toast-enter {
+      animation: slideInDown 0.3s ease-out;
+    }
   </style>
 </head>
 <body class="font-display bg-background-light dark:bg-background-dark text-gray-900 dark:text-white antialiased">
-<div class="min-h-screen flex items-center justify-center p-4">
+<!-- Toast Notification Container -->
+<div id="toast-container" class="fixed top-0 left-0 right-0 z-50 flex justify-center p-4"></div>
+
+<div class="min-h-screen flex items-center justify-center p-4 sm:p-6 lg:p-8">
 <div class="w-full max-w-md">
-<header class="flex justify-center mb-8">
-<svg class="h-10 w-10 text-gray-900 dark:text-white" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<header class="flex justify-center mb-6 sm:mb-8">
+<svg class="h-10 w-10 sm:h-12 sm:w-12 text-gray-900 dark:text-white" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-2.5-12.5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm5 0c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm-2.5 7c-1.38 0-2.5 1.12-2.5 2.5s1.12 2.5 2.5 2.5 2.5-1.12 2.5-2.5-1.12-2.5-2.5-2.5z"></path>
-<title>Company Logo</title>
+<title>IOMP Logo</title>
 </svg>
 </header>
-<main class="bg-background-light dark:bg-background-dark rounded-lg px-4 sm:px-8 py-8">
-<h1 class="text-4xl sm:text-5xl font-bold text-center mb-8">Welcome back</h1>
-<form class="space-y-6">
+<main class="bg-background-light dark:bg-background-dark rounded-lg px-4 sm:px-8 py-6 sm:py-8 shadow-lg">
+<h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-center mb-6 sm:mb-8">Welcome back</h1>
+<form class="space-y-5 sm:space-y-6" id="loginForm">
 <div>
 <label class="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-200" for="email">Email or username</label>
-<input class="w-full p-4 bg-background-light dark:bg-background-dark border border-gray-400 dark:border-gray-600 rounded-md text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-primary focus:border-transparent transition" id="email" type="text"/>
+<input class="w-full p-3 sm:p-4 bg-background-light dark:bg-background-dark border border-gray-400 dark:border-gray-600 rounded-md text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-primary focus:border-transparent transition text-base" id="email" type="text" placeholder="Enter your email" autocomplete="email" required/>
 </div>
 <div>
 <label class="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-200" for="password">Password</label>
-<input class="w-full p-4 bg-background-light dark:bg-background-dark border border-gray-400 dark:border-gray-600 rounded-md text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-primary focus:border-transparent transition" id="password" type="password"/>
+<div class="relative">
+<input class="w-full p-3 sm:p-4 pr-12 bg-background-light dark:bg-background-dark border border-gray-400 dark:border-gray-600 rounded-md text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-primary focus:border-transparent transition text-base" id="password" type="password" placeholder="Enter your password" autocomplete="current-password" required/>
+<button type="button" id="togglePassword" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+<svg id="eyeOpen" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+</svg>
+<svg id="eyeClosed" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path>
+</svg>
+</button>
 </div>
-<button class="w-full bg-primary text-black font-bold py-4 rounded-full hover:scale-105 transform transition duration-200" type="submit">
-            Continue
-          </button>
+</div>
+<button class="w-full bg-primary text-black font-bold py-3 sm:py-4 rounded-full hover:scale-105 hover:shadow-lg active:scale-95 transform transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100" type="submit" id="loginBtn">
+<span id="btnText">Continue</span>
+<span id="btnSpinner" class="hidden">
+<svg class="animate-spin inline-block h-5 w-5 text-black" fill="none" viewBox="0 0 24 24">
+<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+</svg>
+Logging in...
+</span>
+</button>
 </form>
 <div class="border-t border-gray-300 dark:border-gray-700 my-8"></div>
-<div class="text-center">
 <p class="text-gray-500 dark:text-gray-400">Don't have an account?</p>
 <a class="font-bold text-gray-700 dark:text-white underline hover:text-primary dark:hover:text-primary transition mt-2 inline-block" href="#">Sign up</a>
 </div>
 </main>
 </div>
 </div>
+
+<script>
+  // Check if already logged in
+  if (localStorage.getItem('token')) {
+    window.location.href = '/';
+  }
+
+  const loginForm = document.getElementById('loginForm');
+  const loginBtn = document.getElementById('loginBtn');
+  const btnText = document.getElementById('btnText');
+  const btnSpinner = document.getElementById('btnSpinner');
+  const togglePasswordBtn = document.getElementById('togglePassword');
+  const passwordInput = document.getElementById('password');
+  const eyeOpen = document.getElementById('eyeOpen');
+  const eyeClosed = document.getElementById('eyeClosed');
+
+  // Password visibility toggle
+  togglePasswordBtn.addEventListener('click', () => {
+    const type = passwordInput.type === 'password' ? 'text' : 'password';
+    passwordInput.type = type;
+    eyeOpen.classList.toggle('hidden');
+    eyeClosed.classList.toggle('hidden');
+  });
+
+  // Toast notification function
+  function showToast(message, type = 'error') {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    
+    const bgColor = type === 'error' ? 'bg-red-500' : type === 'success' ? 'bg-green-500' : 'bg-blue-500';
+    
+    toast.className = `toast-enter ${bgColor} text-white px-4 sm:px-6 py-3 sm:py-4 rounded-lg shadow-lg flex items-center space-x-3 max-w-md w-full`;
+    toast.innerHTML = `
+      <svg class="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        ${type === 'error' ? 
+          '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>' :
+          '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>'
+        }
+      </svg>
+      <span class="text-sm sm:text-base font-medium">${message}</span>
+    `;
+    
+    container.appendChild(toast);
+    
+    // Auto remove after 4 seconds
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateY(-100%)';
+      toast.style.transition = 'all 0.3s ease-out';
+      setTimeout(() => toast.remove(), 300);
+    }, 4000);
+  }
+
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+
+    // Validate inputs
+    if (!email || !password) {
+      showToast('Please fill in all fields', 'error');
+      return;
+    }
+    
+    // Disable button and show loading state
+    loginBtn.disabled = true;
+    btnText.classList.add('hidden');
+    btnSpinner.classList.remove('hidden');
+
+    try {
+      const response = await fetch('http://localhost:5000/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Store token and user info in localStorage
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        
+        // Show success message
+        showToast('Login successful! Redirecting...', 'success');
+        
+        // Redirect to home page after short delay
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 1000);
+      } else {
+        // Show error message
+        showToast(data.message || 'Invalid email or password', 'error');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      showToast('Unable to connect to server. Please try again.', 'error');
+    } finally {
+      // Re-enable button
+      loginBtn.disabled = false;
+      btnText.classList.remove('hidden');
+      btnSpinner.classList.add('hidden');
+    }
+  });
+
+  // Add Enter key support for better UX
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !loginBtn.disabled) {
+      loginForm.dispatchEvent(new Event('submit'));
+    }
+  });
+</script>
+
 </body></html>
