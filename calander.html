@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Events Calendar - IOMP</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet"/>
+<script>tailwind.config = {theme: {extend: {colors: {"iomp-blue": {dark: "#1e3a8a", light: "#3b82f6"}, "custom-bg": "#f0f2f5", primary: "#135bec", "background-light": "#f6f6f8", "background-dark": "#101622"}, fontFamily: {sans: ["Inter", "sans-serif"], display: "Lexend"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}}}};</script>
+<style>
+  /* Mobile-first responsive styles */
+  @media (max-width: 1024px) {
+    .sidebar-mobile {
+      transform: translateX(-100%);
+      transition: transform 0.3s ease-in-out;
+    }
+    .sidebar-mobile.active {
+      transform: translateX(0);
+    }
+  }
+  
+  /* Profile Dropdown Styles */
+  .profile-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 8px;
+    width: 350px;
+    background: #2d3748;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+    color: white;
+  }
+  
+  .profile-dropdown.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  
+  .profile-dropdown-item {
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    border-radius: 8px;
+    margin: 4px 8px;
+  }
+  
+  .profile-dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+  
+  .profile-dropdown-section {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 8px 0;
+  }
+  
+  .profile-dropdown-header {
+    padding: 20px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .profile-avatar-large {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin: 0 auto 12px;
+    object-fit: cover;
+  }
+  
+  /* Notification Panel */
+  .notification-panel {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 8px;
+    width: 380px;
+    max-height: 500px;
+    overflow-y: auto;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+  }
+  
+  .notification-panel.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  
+  .notification-item {
+    padding: 16px;
+    border-bottom: 1px solid #f0f0f0;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  
+  .notification-item:hover {
+    background: #f9fafb;
+  }
+  
+  .notification-item.unread {
+    background: #eff6ff;
+  }
+  
+  .notification-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: #ef4444;
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 10px;
+    min-width: 18px;
+    text-align: center;
+  }
+
+  /* Calendar Specific Styles */
+  .calendar-day {
+    min-height: 120px;
+    transition: background-color 0.2s;
+  }
+  .calendar-day:hover {
+    background-color: #f9fafb;
+  }
+  .event-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+</style>
+</head>
+<body class="bg-custom-bg font-sans text-gray-800">
+<!-- Mobile Sidebar Overlay -->
+<div id="sidebarOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden lg:hidden"></div>
+
+<div class="flex h-screen" data-purpose="MainApplicationContainer">
+<aside class="sidebar-mobile fixed top-0 left-0 h-full w-64 bg-white border-r border-gray-200 shadow-sm z-50 lg:z-30 lg:transform-none" data-purpose="ApplicationSidebar">
+<div class="flex items-center justify-between h-16 px-6 border-b border-gray-200">
+<div class="flex items-center">
+<img alt="IOMP Logo" class="h-8 w-8 mr-2" src="/IOMP_LOGO.png"/>
+<span class="text-2xl font-bold text-gray-800">IOMP</span>
+</div>
+<button id="closeSidebar" class="lg:hidden text-gray-600 hover:text-gray-900">
+<i class="fas fa-times text-xl"></i>
+</button>
+</div>
+<nav class="mt-6" data-purpose="PrimaryNavigation">
+<ul>
+<li>
+<a class="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-r-full mr-4" href="/">
+<i class="fa-solid fa-house w-6 h-6 mr-3"></i>
+<span class="font-semibold">Home</span>
+</a>
+</li>
+<li>
+<a class="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-r-full mr-4" href="/profile">
+<i class="fa-solid fa-user w-6 h-6 mr-3"></i>
+<span>Profile</span>
+</a>
+</li>
+<li>
+<a class="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-r-full mr-4" href="#">
+<i class="fa-solid fa-users w-6 h-6 mr-3"></i>
+<span>Classrooms</span>
+</a>
+</li>
+<li>
+<a class="flex items-center px-6 py-3 text-white bg-iomp-blue-dark rounded-r-full mr-4" href="/calendar">
+<i class="fa-solid fa-calendar-days w-6 h-6 mr-3"></i>
+<span>Events Calendar</span>
+</a>
+</li>
+<li>
+<a class="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-r-full mr-4" href="/messages">
+<i class="fa-solid fa-inbox w-6 h-6 mr-3"></i>
+<span>Inbox</span>
+</a>
+</li>
+<li class="mt-4 border-t border-gray-200 pt-4">
+<button id="logoutBtn" class="flex items-center w-full px-6 py-3 text-red-600 hover:bg-red-50 hover:text-red-700 rounded-r-full mr-4 transition">
+<i class="fa-solid fa-right-from-bracket w-6 h-6 mr-3"></i>
+<span>Logout</span>
+</button>
+</li>
+</ul>
+</nav>
+<!-- User Info Section -->
+<div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 bg-gray-50">
+<div class="flex items-center space-x-3">
+<img id="userAvatar" alt="User Avatar" class="h-10 w-10 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJ7alwZ4VtU9QjSG7VKafpieuWwNgPDgp2Y4KxAjlKwzhLF9QwtgPuE_RxEueIXjzAiJU3DrN2mg8myDX5Rfxgw2ifFs1p5OCij9LY2ZGhTKIh0kYMHHC3Mtg1ufz4cR_l1c73jMMIalIAWIrN_SQWZVBn-C9kHQB0yE-qHi9Fo1cK2mGRyJk9nbq4IFvGPJGk4WnaxiN08atgc4Ee_rrBwEKGkl90Fub5d2GJsgmGbs3F0VpIEi4oxFCGFJO761a2Q4R5x811WzyZ"/>
+<div class="flex-1 min-w-0">
+<p id="userName" class="text-sm font-semibold text-gray-900 truncate">Loading...</p>
+<p id="userRole" class="text-xs text-gray-500 truncate">Loading...</p>
+</div>
+</div>
+</div>
+</aside>
+<div class="hidden lg:block w-64 flex-shrink-0" data-purpose="SidebarOffset"></div>
+<div class="flex-1 flex flex-col h-screen overflow-hidden" data-purpose="MainContentWrapper">
+<header class="sticky top-0 bg-white border-b border-gray-200 h-16 flex items-center justify-between px-4 sm:px-6 z-20" data-purpose="ApplicationHeader">
+<div class="flex items-center flex-1">
+<button id="menuToggle" class="lg:hidden text-gray-500 hover:text-gray-800 mr-4 p-2 rounded-full hover:bg-gray-100">
+<i class="fa-solid fa-bars text-xl"></i>
+</button>
+<div class="hidden sm:block w-full max-w-xs lg:max-w-md">
+<input class="w-full bg-gray-100 border-gray-200 rounded-lg focus:ring-iomp-blue-light focus:border-iomp-blue-light text-sm" placeholder="Search..." type="search"/>
+</div>
+</div>
+<div class="flex items-center space-x-3 sm:space-x-5">
+<button id="settingsBtn" class="hidden sm:block text-gray-500 hover:text-gray-800 transition" title="Settings">
+<svg class="h-5 w-5 sm:h-6 sm:w-6" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+</svg>
+</button>
+<div class="relative">
+<button id="notificationBtn" class="relative text-gray-500 hover:text-gray-800 transition" title="Notifications">
+<i class="fa-solid fa-bell text-lg sm:text-xl"></i>
+<span id="notificationBadge" class="notification-badge" style="display: none;">0</span>
+</button>
+<!-- Notification Panel -->
+<div id="notificationPanel" class="notification-panel">
+<div class="p-4 border-b border-gray-200 flex items-center justify-between sticky top-0 bg-white">
+<h3 class="font-bold text-lg">Notifications</h3>
+<button id="markAllRead" class="text-sm text-iomp-blue-light hover:underline">Mark all as read</button>
+</div>
+<div id="notificationList" class="divide-y divide-gray-100">
+<!-- Notifications loaded here -->
+</div>
+<div class="p-4 text-center border-t">
+<button onclick="window.location.href='/events'" class="text-iomp-blue-light hover:underline text-sm font-medium">View all events</button>
+</div>
+</div>
+</div>
+<div class="relative">
+<img id="headerUserAvatar" alt="User Avatar" class="h-8 w-8 sm:h-9 sm:w-9 rounded-full object-cover cursor-pointer hover:opacity-80 transition" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJ7alwZ4VtU9QjSG7VKafpieuWwNgPDgp2Y4KxAjlKwzhLF9QwtgPuE_RxEueIXjzAiJU3DrN2mg8myDX5Rfxgw2ifFs1p5OCij9LY2ZGhTKIh0kYMHHC3Mtg1ufz4cR_l1c73jMMIalIAWIrN_SQWZVBn-C9kHQB0yE-qHi9Fo1cK2mGRyJk9nbq4IFvGPJGk4WnaxiN08atgc4Ee_rrBwEKGkl90Fub5d2GJsgmGbs3F0VpIEi4oxFCGFJO761a2Q4R5x811WzyZ"/>
+<!-- Profile Dropdown -->
+<div id="profileDropdown" class="profile-dropdown">
+<div class="profile-dropdown-header">
+<img id="dropdownAvatar" class="profile-avatar-large" src="" alt="Profile Picture">
+<h3 id="dropdownName" class="text-lg font-semibold">User Name</h3>
+<p id="dropdownEmail" class="text-sm text-gray-300 mt-1">user@email.com</p>
+</div>
+<div class="profile-dropdown-section">
+<div class="profile-dropdown-item" onclick="window.location.href='/profile'">
+<i class="fas fa-key text-gray-300 text-lg"></i>
+<span>Profile Settings</span>
+</div>
+<div class="profile-dropdown-item" onclick="alert('Account management coming soon')">
+<i class="fab fa-google text-gray-300 text-lg"></i>
+<span>Manage your Account</span>
+</div>
+<div class="profile-dropdown-item" onclick="window.location.href='/profile'">
+<i class="fas fa-edit text-gray-300 text-lg"></i>
+<span>Customise profile</span>
+</div>
+<div class="profile-dropdown-item">
+<i class="fas fa-sync text-green-400 text-lg"></i>
+<span>Sync is on</span>
+</div>
+</div>
+<div class="profile-dropdown-section">
+<p class="text-xs text-gray-400 px-4 py-2 font-semibold">OTHER PROFILES</p>
+<div id="otherProfilesList"></div>
+<div class="profile-dropdown-item" onclick="alert('Add profile feature coming soon')">
+<i class="fas fa-user-plus text-gray-300 text-lg"></i>
+<span>Add Profile</span>
+</div>
+<div class="profile-dropdown-item" onclick="alert('Guest profile coming soon')">
+<i class="fas fa-user-secret text-gray-300 text-lg"></i>
+<span>Open guest profile</span>
+</div>
+</div>
+<div class="profile-dropdown-section" style="border-bottom: none;">
+<div class="profile-dropdown-item" id="dropdownLogout">
+<i class="fas fa-sign-out-alt text-red-400 text-lg"></i>
+<span class="text-red-400">Sign out</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</header>
+<main class="flex-1 p-4 sm:p-6 overflow-y-auto bg-gray-50" data-purpose="ScrollableContent">
+    <div class="bg-white rounded-lg shadow-sm p-6 h-full flex flex-col">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-2xl font-bold text-gray-800">Events Calendar</h1>
+            <div class="flex items-center gap-4">
+                <div class="flex items-center bg-gray-100 rounded-lg p-1">
+                    <button onclick="changeMonth(-1)" class="p-2 hover:bg-white rounded-md transition text-gray-600">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+                    <span id="currentMonthDisplay" class="px-4 font-semibold text-gray-700 min-w-[140px] text-center"></span>
+                    <button onclick="changeMonth(1)" class="p-2 hover:bg-white rounded-md transition text-gray-600">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                </div>
+                <button onclick="openModal()" class="bg-iomp-blue-light hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition flex items-center gap-2">
+                    <i class="fa-solid fa-plus"></i>
+                    <span class="hidden sm:inline">Add Event</span>
+                </button>
+            </div>
+        </div>
+    
+        <!-- Calendar Grid -->
+        <div class="flex-1 flex flex-col">
+            <!-- Days Header -->
+            <div class="grid grid-cols-7 gap-px bg-gray-200 border border-gray-200 rounded-t-lg overflow-hidden">
+                <div class="bg-gray-50 p-3 text-center text-sm font-semibold text-gray-600">Sun</div>
+                <div class="bg-gray-50 p-3 text-center text-sm font-semibold text-gray-600">Mon</div>
+                <div class="bg-gray-50 p-3 text-center text-sm font-semibold text-gray-600">Tue</div>
+                <div class="bg-gray-50 p-3 text-center text-sm font-semibold text-gray-600">Wed</div>
+                <div class="bg-gray-50 p-3 text-center text-sm font-semibold text-gray-600">Thu</div>
+                <div class="bg-gray-50 p-3 text-center text-sm font-semibold text-gray-600">Fri</div>
+                <div class="bg-gray-50 p-3 text-center text-sm font-semibold text-gray-600">Sat</div>
+            </div>
+            <!-- Days Grid -->
+            <div id="calendar" class="grid grid-cols-7 gap-px bg-gray-200 border-x border-b border-gray-200 rounded-b-lg overflow-hidden flex-1">
+                <!-- Calendar cells will be injected here -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Event Modal -->
+    <div id="modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md transform transition-all scale-100">
+            <div class="flex justify-between items-center p-6 border-b border-gray-100">
+                <h3 class="text-xl font-bold text-gray-800">New Event</h3>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 transition">
+                    <i class="fa-solid fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="p-6 space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Event Title</label>
+                    <input id="title" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-iomp-blue-light focus:border-transparent outline-none transition" placeholder="e.g., Project Meeting">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Date</label>
+                        <input id="date" type="date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-iomp-blue-light focus:border-transparent outline-none transition">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Time</label>
+                        <input id="time" type="time" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-iomp-blue-light focus:border-transparent outline-none transition">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Location</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-location-dot absolute left-3 top-3 text-gray-400"></i>
+                        <input id="location" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-iomp-blue-light focus:border-transparent outline-none transition" placeholder="e.g., Room 301 or Online">
+                    </div>
+                </div>
+            </div>
+            <div class="p-6 border-t border-gray-100 bg-gray-50 rounded-b-xl flex justify-end gap-3">
+                <button onclick="closeModal()" class="px-4 py-2 text-gray-600 hover:bg-gray-200 rounded-lg transition font-medium">Cancel</button>
+                <button onclick="saveEvent()" class="px-6 py-2 bg-iomp-blue-light hover:bg-blue-600 text-white rounded-lg transition font-medium shadow-sm">Save Event</button>
+            </div>
+        </div>
+    </div>
+</main>
+</div>
+</div>
+
+<script>
+  // Authentication check
+  const token = localStorage.getItem('token');
+  const userStr = localStorage.getItem('user');
+  
+  if (!token || !userStr) {
+    // Redirect to login if not authenticated
+    window.location.href = '/login';
+  } else {
+    // Load user data
+    try {
+      const user = JSON.parse(userStr);
+      
+      // Update user info in sidebar
+      document.getElementById('userName').textContent = user.name || 'User';
+      document.getElementById('userRole').textContent = user.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : 'Member';
+      
+      // Update avatars
+      if (user.profile_picture) {
+        document.getElementById('userAvatar').src = user.profile_picture;
+        document.getElementById('headerUserAvatar').src = user.profile_picture;
+      }
+      
+    } catch (error) {
+      console.error('Error parsing user data:', error);
+      window.location.href = '/login';
+    }
+  }
+  
+  // Logout functionality
+  document.getElementById('logoutBtn').addEventListener('click', () => {
+    if (confirm('Are you sure you want to logout?')) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      localStorage.removeItem('lastLoginTime');
+      window.location.href = '/login';
+    }
+  });
+  
+  // Mobile sidebar toggle
+  const menuToggle = document.getElementById('menuToggle');
+  const closeSidebar = document.getElementById('closeSidebar');
+  const sidebar = document.querySelector('.sidebar-mobile');
+  const overlay = document.getElementById('sidebarOverlay');
+  
+  function openSidebar() {
+    sidebar.classList.add('active');
+    overlay.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+  
+  function closeSidebarFn() {
+    sidebar.classList.remove('active');
+    overlay.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+  
+  menuToggle.addEventListener('click', openSidebar);
+  closeSidebar.addEventListener('click', closeSidebarFn);
+  overlay.addEventListener('click', closeSidebarFn);
+  
+  // Close sidebar on window resize to desktop
+  window.addEventListener('resize', () => {
+    if (window.innerWidth >= 1024) {
+      closeSidebarFn();
+    }
+  });
+  
+  // Profile Dropdown Functionality
+  const headerAvatar = document.getElementById('headerUserAvatar');
+  const profileDropdown = document.getElementById('profileDropdown');
+  const dropdownLogout = document.getElementById('dropdownLogout');
+  
+  // Toggle dropdown on avatar click
+  headerAvatar.addEventListener('click', (e) => {
+    e.stopPropagation();
+    profileDropdown.classList.toggle('active');
+    
+    // Populate dropdown with user data
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      const user = JSON.parse(userData);
+      document.getElementById('dropdownAvatar').src = user.profile_picture || headerAvatar.src;
+      document.getElementById('dropdownName').textContent = user.name || 'User';
+      document.getElementById('dropdownEmail').textContent = user.email || 'user@email.com';
+    }
+  });
+  
+  // Close dropdown when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!profileDropdown.contains(e.target) && e.target !== headerAvatar) {
+      profileDropdown.classList.remove('active');
+    }
+  });
+  
+  // Logout from dropdown
+  dropdownLogout.addEventListener('click', () => {
+    if (confirm('Are you sure you want to sign out?')) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      localStorage.removeItem('lastLoginTime');
+      window.location.href = '/login';
+    }
+  });
+  
+  // Notification Functionality
+  const notificationBtn = document.getElementById('notificationBtn');
+  const notificationPanel = document.getElementById('notificationPanel');
+  
+  // Toggle notification panel
+  notificationBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    notificationPanel.classList.toggle('active');
+    profileDropdown.classList.remove('active'); // Close profile dropdown if open
+  });
+  
+  // Close notification panel when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!notificationPanel.contains(e.target) && e.target !== notificationBtn) {
+      notificationPanel.classList.remove('active');
+    }
+  });
+</script>
+<script src="calander.js"></script>
+</body></html>

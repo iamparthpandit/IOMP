@@ -62,7 +62,7 @@ def login():
             }), 401
         
         # Generate JWT token
-        access_token = create_access_token(identity=user.id)
+        access_token = create_access_token(identity=str(user.id))
         
         return jsonify({
             'success': True,
@@ -106,21 +106,146 @@ def get_current_user():
             'message': 'Not authorized'
         }), 401
 
+@auth_bp.route('/notifications', methods=['GET'])
+@jwt_required()
+def get_notifications():
+    """Get user notifications"""
+    try:
+        user_id = get_jwt_identity()
+        user = User.query.get(user_id)
         
         if not user:
-            return jsonify({
-                'success': False,
-                'message': 'User not found'
-            }), 404
+            return jsonify({'success': False, 'message': 'User not found'}), 404
+        
+        # Sample notifications (in production, fetch from database)
+        notifications = [
+            {
+                'id': 1,
+                'type': 'event',
+                'title': 'New Event: Tech Fest 2025',
+                'message': 'Annual Tech & Culture Fest is coming up on Jan 15, 2025',
+                'timestamp': '2 hours ago',
+                'read': False,
+                'icon': 'fa-calendar'
+            },
+            {
+                'id': 2,
+                'type': 'assignment',
+                'title': 'Assignment Due',
+                'message': 'Data Structures assignment due in 3 days',
+                'timestamp': '5 hours ago',
+                'read': False,
+                'icon': 'fa-file-alt'
+            },
+            {
+                'id': 3,
+                'type': 'message',
+                'title': 'New Message from Dr. Smith',
+                'message': 'Please check your email for project feedback',
+                'timestamp': '1 day ago',
+                'read': True,
+                'icon': 'fa-envelope'
+            },
+            {
+                'id': 4,
+                'type': 'announcement',
+                'title': 'Campus Update',
+                'message': 'Library hours extended during exam week',
+                'timestamp': '2 days ago',
+                'read': True,
+                'icon': 'fa-bullhorn'
+            }
+        ]
+        
+        unread_count = sum(1 for n in notifications if not n['read'])
         
         return jsonify({
             'success': True,
-            'user': user.to_dict()
+            'notifications': notifications,
+            'unread_count': unread_count
         }), 200
         
     except Exception as e:
-        print(f'Auth error: {str(e)}')
+        print(f'Error fetching notifications: {str(e)}')
+        return jsonify({'success': False, 'message': 'Server error'}), 500
+
+@auth_bp.route('/notifications/<int:notification_id>/read', methods=['PUT'])
+@jwt_required()
+def mark_notification_read(notification_id):
+    """Mark notification as read"""
+    try:
         return jsonify({
-            'success': False,
-            'message': 'Not authorized'
-        }), 401
+            'success': True,
+            'message': 'Notification marked as read'
+        }), 200
+    except Exception as e:
+        return jsonify({'success': False, 'message': 'Server error'}), 500
+
+@auth_bp.route('/settings', methods=['GET'])
+@jwt_required()
+def get_settings():
+    """Get user settings"""
+    try:
+        user_id = get_jwt_identity()
+        user = User.query.get(user_id)
+        
+        if not user:
+            return jsonify({'success': False, 'message': 'User not found'}), 404
+        
+        # Sample settings (in production, fetch from database)
+        settings = {
+            'profile': {
+                'email': user.email,
+                'name': user.first_name + ' ' + user.last_name,
+                'role': user.role,
+                'department': user.department_id
+            },
+            'notifications': {
+                'email_notifications': True,
+                'push_notifications': True,
+                'event_reminders': True,
+                'assignment_alerts': True
+            },
+            'privacy': {
+                'profile_visibility': 'public',
+                'show_email': False,
+                'show_department': True
+            },
+            'appearance': {
+                'theme': 'light',
+                'language': 'en'
+            }
+        }
+        
+        return jsonify({
+            'success': True,
+            'settings': settings
+        }), 200
+        
+    except Exception as e:
+        print(f'Error fetching settings: {str(e)}')
+        return jsonify({'success': False, 'message': 'Server error'}), 500
+
+@auth_bp.route('/settings', methods=['PUT'])
+@jwt_required()
+def update_settings():
+    """Update user settings"""
+    try:
+        user_id = get_jwt_identity()
+        user = User.query.get(user_id)
+        
+        if not user:
+            return jsonify({'success': False, 'message': 'User not found'}), 404
+        
+        data = request.get_json()
+        
+        # In production, save to database
+        return jsonify({
+            'success': True,
+            'message': 'Settings updated successfully',
+            'settings': data
+        }), 200
+        
+    except Exception as e:
+        print(f'Error updating settings: {str(e)}')
+        return jsonify({'success': False, 'message': 'Server error'}), 500

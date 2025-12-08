@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Messages - IOMP</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet"/>
+    <script>tailwind.config = {theme: {extend: {colors: {"iomp-blue": {dark: "#1e3a8a", light: "#3b82f6"}, "custom-bg": "#f0f2f5", primary: "#135bec", "background-light": "#f6f6f8", "background-dark": "#101622"}, fontFamily: {sans: ["Inter", "sans-serif"], display: "Lexend"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}}}};</script>
+    <style>
+        /* Mobile-first responsive styles */
+        @media (max-width: 1024px) {
+            .sidebar-mobile {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease-in-out;
+            }
+            .sidebar-mobile.active {
+                transform: translateX(0);
+            }
+        }
+        
+        /* Profile Dropdown Styles */
+        .profile-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 8px;
+            width: 350px;
+            background: #2d3748;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            color: white;
+        }
+        
+        .profile-dropdown.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .profile-dropdown-item {
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            border-radius: 8px;
+            margin: 4px 8px;
+        }
+        
+        .profile-dropdown-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .profile-dropdown-section {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 8px 0;
+        }
+        
+        .profile-dropdown-header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .profile-avatar-large {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 12px;
+            object-fit: cover;
+        }
+
+        /* Chat Specific Styles */
+        .chat-container {
+            height: calc(100vh - 140px);
+        }
+        .message-bubble {
+            max-width: 70%;
+            word-wrap: break-word;
+        }
+        .message-sent {
+            background-color: #3b82f6;
+            color: white;
+            border-radius: 1rem 1rem 0 1rem;
+            margin-left: auto;
+        }
+        .message-received {
+            background-color: #e5e7eb;
+            color: #1f2937;
+            border-radius: 1rem 1rem 1rem 0;
+            margin-right: auto;
+        }
+    </style>
+</head>
+<body class="bg-custom-bg font-sans text-gray-800">
+    <!-- Mobile Sidebar Overlay -->
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden lg:hidden"></div>
+
+    <div class="flex h-screen" data-purpose="MainApplicationContainer">
+        <aside class="sidebar-mobile fixed top-0 left-0 h-full w-64 bg-white border-r border-gray-200 shadow-sm z-50 lg:z-30 lg:transform-none" data-purpose="ApplicationSidebar">
+            <div class="flex items-center justify-between h-16 px-6 border-b border-gray-200">
+                <div class="flex items-center">
+                    <img alt="IOMP Logo" class="h-8 w-8 mr-2" src="/IOMP_LOGO.png"/>
+                    <span class="text-2xl font-bold text-gray-800">IOMP</span>
+                </div>
+                <button id="closeSidebar" class="lg:hidden text-gray-600 hover:text-gray-900">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <nav class="mt-6" data-purpose="PrimaryNavigation">
+                <ul>
+                    <li>
+                        <a class="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-r-full mr-4" href="/">
+                            <i class="fa-solid fa-house w-6 h-6 mr-3"></i>
+                            <span class="font-semibold">Home</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-r-full mr-4" href="/profile">
+                            <i class="fa-solid fa-user w-6 h-6 mr-3"></i>
+                            <span>Profile</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-r-full mr-4" href="#">
+                            <i class="fa-solid fa-users w-6 h-6 mr-3"></i>
+                            <span>Classrooms</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="flex items-center px-6 py-3 text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-r-full mr-4" href="/calendar">
+                            <i class="fa-solid fa-calendar-days w-6 h-6 mr-3"></i>
+                            <span>Events Calendar</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="flex items-center px-6 py-3 text-white bg-iomp-blue-dark rounded-r-full mr-4" href="/messages">
+                            <i class="fa-solid fa-inbox w-6 h-6 mr-3"></i>
+                            <span>Inbox</span>
+                        </a>
+                    </li>
+                    <li class="mt-4 border-t border-gray-200 pt-4">
+                        <button id="logoutBtn" class="flex items-center w-full px-6 py-3 text-red-600 hover:bg-red-50 hover:text-red-700 rounded-r-full mr-4 transition">
+                            <i class="fa-solid fa-right-from-bracket w-6 h-6 mr-3"></i>
+                            <span>Logout</span>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+            <!-- User Info Section -->
+            <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 bg-gray-50">
+                <div class="flex items-center space-x-3">
+                    <img id="userAvatar" alt="User Avatar" class="h-10 w-10 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJ7alwZ4VtU9QjSG7VKafpieuWwNgPDgp2Y4KxAjlKwzhLF9QwtgPuE_RxEueIXjzAiJU3DrN2mg8myDX5Rfxgw2ifFs1p5OCij9LY2ZGhTKIh0kYMHHC3Mtg1ufz4cR_l1c73jMMIalIAWIrN_SQWZVBn-C9kHQB0yE-qHi9Fo1cK2mGRyJk9nbq4IFvGPJGk4WnaxiN08atgc4Ee_rrBwEKGkl90Fub5d2GJsgmGbs3F0VpIEi4oxFCGFJO761a2Q4R5x811WzyZ"/>
+                    <div class="flex-1 min-w-0">
+                        <p id="userName" class="text-sm font-semibold text-gray-900 truncate">Loading...</p>
+                        <p id="userRole" class="text-xs text-gray-500 truncate">Loading...</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        <div class="hidden lg:block w-64 flex-shrink-0" data-purpose="SidebarOffset"></div>
+        <div class="flex-1 flex flex-col h-screen overflow-hidden" data-purpose="MainContentWrapper">
+            <header class="sticky top-0 bg-white border-b border-gray-200 h-16 flex items-center justify-between px-4 sm:px-6 z-20" data-purpose="ApplicationHeader">
+                <div class="flex items-center flex-1">
+                    <button id="menuToggle" class="lg:hidden text-gray-500 hover:text-gray-800 mr-4 p-2 rounded-full hover:bg-gray-100">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                    <h1 class="text-xl font-bold text-gray-800">Messages</h1>
+                </div>
+                <div class="flex items-center space-x-3 sm:space-x-5">
+                    <div class="relative">
+                        <img id="headerUserAvatar" alt="User Avatar" class="h-8 w-8 sm:h-9 sm:w-9 rounded-full object-cover cursor-pointer hover:opacity-80 transition" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJ7alwZ4VtU9QjSG7VKafpieuWwNgPDgp2Y4KxAjlKwzhLF9QwtgPuE_RxEueIXjzAiJU3DrN2mg8myDX5Rfxgw2ifFs1p5OCij9LY2ZGhTKIh0kYMHHC3Mtg1ufz4cR_l1c73jMMIalIAWIrN_SQWZVBn-C9kHQB0yE-qHi9Fo1cK2mGRyJk9nbq4IFvGPJGk4WnaxiN08atgc4Ee_rrBwEKGkl90Fub5d2GJsgmGbs3F0VpIEi4oxFCGFJO761a2Q4R5x811WzyZ"/>
+                        <!-- Profile Dropdown -->
+                        <div id="profileDropdown" class="profile-dropdown">
+                            <div class="profile-dropdown-header">
+                                <img id="dropdownAvatar" class="profile-avatar-large" src="" alt="Profile Picture">
+                                <h3 id="dropdownName" class="text-lg font-semibold">User Name</h3>
+                                <p id="dropdownEmail" class="text-sm text-gray-300 mt-1">user@email.com</p>
+                            </div>
+                            <div class="profile-dropdown-section">
+                                <div class="profile-dropdown-item" onclick="window.location.href='/profile'">
+                                    <i class="fas fa-key text-gray-300 text-lg"></i>
+                                    <span>Profile Settings</span>
+                                </div>
+                                <div class="profile-dropdown-section" style="border-bottom: none;">
+                                    <div class="profile-dropdown-item" id="dropdownLogout">
+                                        <i class="fas fa-sign-out-alt text-red-400 text-lg"></i>
+                                        <span class="text-red-400">Sign out</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <main class="flex-1 p-4 sm:p-6 overflow-hidden bg-gray-50" data-purpose="ScrollableContent">
+                <div class="flex h-full bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">
+                    <!-- Users List Sidebar -->
+                    <div class="w-1/3 border-r border-gray-200 flex flex-col bg-white">
+                        <div class="p-4 border-b border-gray-200">
+                            <h2 class="text-lg font-semibold text-gray-800">Chats</h2>
+                            <div class="mt-2 relative">
+                                <input type="text" placeholder="Search users..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm">
+                                <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                            </div>
+                        </div>
+                        <div id="usersList" class="flex-1 overflow-y-auto">
+                            <!-- Users will be populated here -->
+                            <div class="p-4 text-center text-gray-500">Loading users...</div>
+                        </div>
+                    </div>
+
+                    <!-- Chat Area -->
+                    <div class="flex-1 flex flex-col bg-gray-50">
+                        <!-- Chat Header -->
+                        <div id="chatHeader" class="p-4 bg-white border-b border-gray-200 flex items-center justify-between hidden">
+                            <div class="flex items-center">
+                                <div class="relative">
+                                    <img id="chatUserAvatar" src="" alt="" class="w-10 h-10 rounded-full object-cover">
+                                    <span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
+                                </div>
+                                <div class="ml-3">
+                                    <h3 id="chatUserName" class="font-semibold text-gray-800"></h3>
+                                    <p class="text-xs text-green-600">Online</p>
+                                </div>
+                            </div>
+                            <button class="text-gray-400 hover:text-gray-600">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                        </div>
+
+                        <!-- Empty State -->
+                        <div id="emptyState" class="flex-1 flex flex-col items-center justify-center text-gray-500">
+                            <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+                                <i class="fas fa-comments text-3xl text-blue-500"></i>
+                            </div>
+                            <h3 class="text-lg font-medium text-gray-900">Your Messages</h3>
+                            <p class="mt-1">Select a user to start chatting</p>
+                        </div>
+
+                        <!-- Messages Container -->
+                        <div id="messagesContainer" class="flex-1 overflow-y-auto p-4 space-y-4 hidden">
+                            <!-- Messages will be populated here -->
+                        </div>
+
+                        <!-- Input Area -->
+                        <div id="inputArea" class="p-4 bg-white border-t border-gray-200 hidden">
+                            <form id="messageForm" class="flex items-center gap-2">
+                                <button type="button" class="p-2 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100">
+                                    <i class="fas fa-paperclip"></i>
+                                </button>
+                                <input type="text" id="messageInput" placeholder="Type a message..." class="flex-1 border-0 bg-gray-100 rounded-full px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:bg-white transition-colors">
+                                <button type="submit" class="p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors w-10 h-10 flex items-center justify-center">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // Global State
+        let currentUser = null;
+        let selectedUser = null;
+        let users = [];
+        let messages = [];
+        let pollingInterval = null;
+
+        // DOM Elements
+        const usersListEl = document.getElementById('usersList');
+        const chatHeaderEl = document.getElementById('chatHeader');
+        const emptyStateEl = document.getElementById('emptyState');
+        const messagesContainerEl = document.getElementById('messagesContainer');
+        const inputAreaEl = document.getElementById('inputArea');
+        const chatUserNameEl = document.getElementById('chatUserName');
+        const chatUserAvatarEl = document.getElementById('chatUserAvatar');
+        const messageFormEl = document.getElementById('messageForm');
+        const messageInputEl = document.getElementById('messageInput');
+
+        // Auth Check
+        async function checkAuth() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = '/login';
+                return;
+            }
+
+            // Decode token to get user info (simple decode, not verification)
+            try {
+                const base64Url = token.split('.')[1];
+                const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                }).join(''));
+                
+                const payload = JSON.parse(jsonPayload);
+                currentUser = {
+                    id: payload.sub, // Assuming 'sub' is the user ID
+                    // We might need to fetch full user details if not in token
+                };
+                
+                // Fetch full user profile to get name/avatar
+                await fetchUserProfile();
+            } catch (e) {
+                console.error('Invalid token', e);
+                localStorage.removeItem('token');
+                window.location.href = '/login';
+            }
+        }
+
+        async function fetchUserProfile() {
+            const token = localStorage.getItem('token');
+            try {
+                console.log('Fetching users...');
+                const response = await fetch('/api/users', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (response.ok) {
+                    const allUsers = await response.json();
+                    console.log('Users fetched:', allUsers);
+                    
+                    if (!currentUser || !currentUser.id) {
+                        console.error('Current user ID missing');
+                        return;
+                    }
+
+                    // Filter out current user
+                    users = allUsers.filter(u => u.id !== currentUser.id);
+                    
+                    if (users.length === 0) {
+                        usersListEl.innerHTML = '<div class="p-4 text-center text-gray-500">No other users found.</div>';
+                    } else {
+                        renderUsersList();
+                    }
+                    
+                    // Update profile info
+                    const me = allUsers.find(u => u.id === currentUser.id);
+                    if (me) {
+                        updateProfileUI(me);
+                    }
+                } else {
+                    console.error('Failed to fetch users:', response.status);
+                    usersListEl.innerHTML = `<div class="p-4 text-center text-red-500">Failed to load users. Status: ${response.status}</div>`;
+                    if (response.status === 401 || response.status === 422) {
+                        // Token expired or invalid
+                        localStorage.removeItem('token');
+                        window.location.href = '/login';
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching users:', error);
+                usersListEl.innerHTML = `<div class="p-4 text-center text-red-500">Error loading users: ${error.message}</div>`;
+            }
+        }
+
+        function updateProfileUI(me) {
+            const name = me.name || 'User';
+            const role = me.role || 'Member';
+            const avatar = me.profile_picture || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(name);
+            
+            const els = {
+                userName: document.getElementById('userName'),
+                userRole: document.getElementById('userRole'),
+                userAvatar: document.getElementById('userAvatar'),
+                headerUserAvatar: document.getElementById('headerUserAvatar'),
+                dropdownName: document.getElementById('dropdownName'),
+                dropdownEmail: document.getElementById('dropdownEmail'),
+                dropdownAvatar: document.getElementById('dropdownAvatar')
+            };
+
+            if (els.userName) els.userName.textContent = name;
+            if (els.userRole) els.userRole.textContent = role;
+            if (els.userAvatar) els.userAvatar.src = avatar;
+            if (els.headerUserAvatar) els.headerUserAvatar.src = avatar;
+            if (els.dropdownName) els.dropdownName.textContent = name;
+            if (els.dropdownEmail) els.dropdownEmail.textContent = me.email;
+            if (els.dropdownAvatar) els.dropdownAvatar.src = avatar;
+        }
+
+        function renderUsersList() {
+            usersListEl.innerHTML = users.map(user => `
+                <div onclick="selectUser(${user.id})" class="p-4 flex items-center hover:bg-gray-50 cursor-pointer transition-colors border-b border-gray-100 ${selectedUser && selectedUser.id === user.id ? 'bg-blue-50 border-l-4 border-l-blue-500' : ''}">
+                    <div class="relative">
+                        <img src="${user.profile_picture || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.name)}" alt="${user.name}" class="w-12 h-12 rounded-full object-cover">
+                        <span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
+                    </div>
+                    <div class="ml-3 flex-1 min-w-0">
+                        <div class="flex justify-between items-baseline">
+                            <h3 class="text-sm font-semibold text-gray-900 truncate">${user.name}</h3>
+                            <span class="text-xs text-gray-400">12:30 PM</span>
+                        </div>
+                        <p class="text-sm text-gray-500 truncate">Click to start chatting</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        window.selectUser = function(userId) {
+            selectedUser = users.find(u => u.id === userId);
+            renderUsersList(); // Re-render to update active state
+            
+            // Update Chat Header
+            chatUserNameEl.textContent = selectedUser.name;
+            chatUserAvatarEl.src = selectedUser.profile_picture || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(selectedUser.name);
+            
+            // Show Chat UI
+            chatHeaderEl.classList.remove('hidden');
+            messagesContainerEl.classList.remove('hidden');
+            inputAreaEl.classList.remove('hidden');
+            emptyStateEl.classList.add('hidden');
+            
+            // Load Messages
+            fetchMessages();
+            
+            // Scroll to bottom
+            scrollToBottom();
+        };
+
+        async function fetchMessages() {
+            if (!selectedUser) return;
+            
+            const token = localStorage.getItem('token');
+            try {
+                // We need to filter messages for this specific conversation
+                // The API returns ALL messages for the current user (sent and received)
+                const response = await fetch('/api/messages', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (response.ok) {
+                    const allMessages = await response.json();
+                    
+                    // Filter: (Sender is Me AND Receiver is Them) OR (Sender is Them AND Receiver is Me)
+                    messages = allMessages.filter(m => 
+                        (m.sender_id === currentUser.id && m.receiver_id === selectedUser.id) ||
+                        (m.sender_id === selectedUser.id && m.receiver_id === currentUser.id)
+                    );
+                    
+                    // Sort by timestamp (assuming ID is chronological for now, or add timestamp to model)
+                    messages.sort((a, b) => a.id - b.id);
+                    
+                    renderMessages();
+                }
+            } catch (error) {
+                console.error('Error fetching messages:', error);
+            }
+        }
+
+        function renderMessages() {
+            messagesContainerEl.innerHTML = messages.map(msg => {
+                const isMe = msg.sender_id === currentUser.id;
+                return `
+                    <div class="flex ${isMe ? 'justify-end' : 'justify-start'}">
+                        <div class="message-bubble px-4 py-2 shadow-sm ${isMe ? 'message-sent' : 'message-received'}">
+                            <p class="text-sm">${msg.content}</p>
+                            <p class="text-xs mt-1 opacity-70 text-right">Just now</p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            scrollToBottom();
+        }
+
+        function scrollToBottom() {
+            messagesContainerEl.scrollTop = messagesContainerEl.scrollHeight;
+        }
+
+        async function sendMessage(content) {
+            if (!content.trim() || !selectedUser) return;
+            
+            const token = localStorage.getItem('token');
+            try {
+                const response = await fetch('/api/messages', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        receiver_id: selectedUser.id,
+                        content: content
+                    })
+                });
+                
+                if (response.ok) {
+                    messageInputEl.value = '';
+                    fetchMessages(); // Refresh messages
+                }
+            } catch (error) {
+                console.error('Error sending message:', error);
+            }
+        }
+
+        // Event Listeners
+        messageFormEl.addEventListener('submit', (e) => {
+            e.preventDefault();
+            sendMessage(messageInputEl.value);
+        });
+
+        // Sidebar Toggle Logic (Copied from other pages)
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.querySelector('.sidebar-mobile');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const closeSidebar = document.getElementById('closeSidebar');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('active');
+            sidebarOverlay.classList.toggle('hidden');
+        }
+
+        menuToggle.addEventListener('click', toggleSidebar);
+        closeSidebar.addEventListener('click', toggleSidebar);
+        sidebarOverlay.addEventListener('click', toggleSidebar);
+
+        // Profile Dropdown Logic
+        const headerUserAvatar = document.getElementById('headerUserAvatar');
+        const profileDropdown = document.getElementById('profileDropdown');
+        
+        headerUserAvatar.addEventListener('click', (e) => {
+            e.stopPropagation();
+            profileDropdown.classList.toggle('active');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!profileDropdown.contains(e.target) && e.target !== headerUserAvatar) {
+                profileDropdown.classList.remove('active');
+            }
+        });
+
+        // Logout Logic
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.removeItem('token');
+            window.location.href = '/login';
+        });
+        document.getElementById('dropdownLogout').addEventListener('click', () => {
+            localStorage.removeItem('token');
+            window.location.href = '/login';
+        });
+
+        // Initialize
+        checkAuth();
+        
+        // Poll for new messages every 3 seconds
+        setInterval(() => {
+            if (selectedUser) {
+                fetchMessages();
+            }
+        }, 3000);
+
+    </script>
+</body>
+</html>
