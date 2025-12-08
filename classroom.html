@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>IOMP - Classrooms</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+        tailwind.config = {
+          theme: {
+            extend: {
+              colors: {
+                'iomp-sidebar': '#ffffff',
+                'iomp-main-bg': '#f0f2f5',
+                'iomp-active-nav': '#2c3e50',
+                'iomp-nav-text': '#374151',
+                'iomp-card-body': '#f7f2e9', // Beige-like color
+                'iomp-card-blue': '#2c3e50',
+                'iomp-card-green': '#166534',
+                'iomp-card-maroon': '#881337',
+                'iomp-card-text': '#6b7280',
+                'iomp-orange': '#f97316',
+              },
+              fontFamily: {
+                sans: ['Inter', 'sans-serif'],
+              },
+              backgroundImage: {
+                'map-pattern': "url('https://www.transparenttextures.com/patterns/clean-gray-paper.png')",
+                'blueprint-pattern': "url('https://www.transparenttextures.com/patterns/worn-dots.png')",
+                'book-pattern': "url('https://www.transparenttextures.com/patterns/subtle-grunge.png')",
+              }
+            }
+          }
+        }
+    </script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+<style data-purpose="layout-and-card-styles">
+        .card-header-bg {
+          position: relative;
+          background-size: cover;
+          background-position: center;
+        }
+        .card-header-bg::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color: inherit;
+          opacity: 0.9;
+          z-index: 1;
+        }
+        .card-header-bg > * {
+          position: relative;
+          z-index: 2;
+        }
+    </style>
+</head>
+<body class="bg-iomp-main-bg font-sans">
+<div class="flex h-screen" data-purpose="app-container">
+<aside class="w-64 bg-iomp-sidebar border-r border-gray-200 flex flex-col fixed h-full">
+<div class="flex items-center justify-start p-6 border-b border-gray-200">
+<div class="flex h-10 w-10 mr-3 rounded items-center justify-center bg-iomp-active-nav text-white">
+<i class="fas fa-book text-2xl"></i>
+</div>
+<span class="text-2xl font-bold text-gray-800">IOMP</span>
+</div>
+<nav class="flex-grow pt-6">
+<ul>
+<li>
+<a class="flex items-center px-6 py-3 text-iomp-nav-text hover:bg-gray-100" href="#">
+<i class="fas fa-home w-6 text-center text-lg"></i>
+<span class="ml-4 font-medium">Home</span>
+</a>
+</li>
+<li>
+<a class="flex items-center px-6 py-3 text-iomp-nav-text hover:bg-gray-100" href="#">
+<i class="fas fa-user w-6 text-center text-lg"></i>
+<span class="ml-4 font-medium">Profile</span>
+</a>
+</li>
+<li>
+<a class="flex items-center px-6 py-3 text-white bg-iomp-active-nav rounded-lg mx-3" href="#">
+<i class="fas fa-chalkboard-teacher w-6 text-center text-lg"></i>
+<span class="ml-4 font-medium">Classrooms</span>
+</a>
+</li>
+<li>
+<a class="flex items-center px-6 py-3 text-iomp-nav-text hover:bg-gray-100" href="#">
+<i class="fas fa-calendar-alt w-6 text-center text-lg"></i>
+<span class="ml-4 font-medium">Events Calendar</span>
+</a>
+</li>
+<li>
+<a class="flex items-center px-6 py-3 text-iomp-nav-text hover:bg-gray-100" href="#">
+<i class="fas fa-inbox w-6 text-center text-lg"></i>
+<span class="ml-4 font-medium">Inbox</span>
+</a>
+</li>
+</ul>
+</nav>
+</aside>
+<main class="flex-1 ml-64 p-8">
+<header class="mb-8">
+<div class="flex justify-between items-center mb-6">
+<h1 class="text-3xl font-bold text-gray-800">Classrooms</h1>
+<div class="flex items-center space-x-6">
+<button class="text-gray-500 hover:text-gray-800">
+<i class="fas fa-cog text-xl"></i>
+</button>
+<button class="relative text-gray-500 hover:text-gray-800">
+<i class="fas fa-bell text-xl"></i>
+<span class="absolute top-0 right-0 h-2 w-2 bg-iomp-orange rounded-full"></span>
+</button>
+<div class="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
+<i class="fas fa-user text-gray-500 text-xl"></i>
+</div>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<div class="relative w-1/3">
+<input class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-iomp-active-nav" placeholder="Search..." type="text"/>
+<i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+</div>
+<div class="flex items-center space-x-2">
+<span class="text-sm font-medium text-gray-600">Sort by:</span>
+<select class="border border-gray-300 rounded-md py-2 pl-3 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-iomp-active-nav">
+<option>Most Recent</option>
+<option>Oldest</option>
+<option>By Name (A-Z)</option>
+</select>
+</div>
+</div>
+</header>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<article class="bg-white rounded-xl shadow-md overflow-hidden flex flex-col" data-purpose="course-card">
+<div class="p-6 text-white card-header-bg bg-iomp-card-blue bg-map-pattern">
+<h2 class="text-xl font-bold">ASTR405: Cosmology &amp; Astrophysics</h2>
+<p class="text-sm mt-1 opacity-90">Dr. Vera Rubin</p>
+<img alt="Dr. Vera Rubin" class="absolute bottom-[-40px] right-6 h-20 w-20 rounded-full border-4 border-white shadow-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCFdWjG7RomfscYKSpp2D06xx81t-Y4rjrJ-2xRDy5WcJJ96vgJsfmV7WtCw4JaLB3dPgAztTw7fYzGFbWxKKBoy2m0tDrDsNQy_L2QoKVOc-tCqlgT1cnxU3hesWIKymh2RzsiMa1ddDkIvzPL1vLdkUt2JB2c68WFpEEL6unaptYR9nVG39_CWS6LMx25R9_ktxX7I0u9ZIwODhBbYKLIMTFo3ldZagyWEcPjkzbdmb3zJI7WgHX7zX4ujZcVTY3ogrDUAIDI2PC-"/>
+</div>
+<div class="h-10 bg-white"></div>
+<div class="p-6 bg-white flex-grow">
+<div class="flex justify-around text-center text-iomp-card-text">
+<a class="hover:text-iomp-card-blue" href="#">
+<i class="fas fa-book-open text-2xl"></i>
+<span class="block text-xs mt-1">Materials</span>
+</a>
+<a class="hover:text-iomp-card-blue" href="#">
+<i class="fas fa-tasks text-2xl"></i>
+<span class="block text-xs mt-1">Assignments</span>
+</a>
+<a class="hover:text-iomp-card-blue" href="#">
+<i class="fas fa-bullhorn text-2xl"></i>
+<span class="block text-xs mt-1">Announcements</span>
+</a>
+</div>
+</div>
+</article>
+<article class="bg-white rounded-xl shadow-md overflow-hidden flex flex-col" data-purpose="course-card">
+<div class="p-6 text-white card-header-bg bg-iomp-card-green bg-map-pattern">
+<h2 class="text-xl font-bold">PHIL301: Advanced Ethics</h2>
+<p class="text-sm mt-1 opacity-90">Prof. Martha Nussbaum</p>
+<img alt="Prof. Martha Nussbaum" class="absolute bottom-[-40px] right-6 h-20 w-20 rounded-full border-4 border-white shadow-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3B-yHISXuigKk0oEZuVi1spr3cjoJreaHhHdW_MY5uY_V7ct6p93noX-3ZNOA56aUa81Pjk9_05W-UqIEDoLG2JHBaoYL8kDvh0n-73IBRGmGpDUxvJC1Z2IVGeY3IDUKQvzuaNf1ohUr5tr8jvHzVfk2yKD6UQZ_ho4Qs7v3FHhxHLGSByTIdrzt-iFIQ40hD79e_0yCUPHDnZKRvDDInbi1q4lo_4K05a9cuPUsCKDoi7Y7zKcwPVDO6glVpdQmvWUq_tRmv9fv"/>
+</div>
+<div class="h-10 bg-white"></div>
+<div class="p-6 bg-white flex-grow">
+<div class="flex justify-around text-center text-iomp-card-text">
+<a class="hover:text-iomp-card-green" href="#">
+<i class="fas fa-book-open text-2xl"></i>
+<span class="block text-xs mt-1">Materials</span>
+</a>
+<a class="hover:text-iomp-card-green" href="#">
+<i class="fas fa-tasks text-2xl"></i>
+<span class="block text-xs mt-1">Assignments</span>
+</a>
+<a class="hover:text-iomp-card-green" href="#">
+<i class="fas fa-bullhorn text-2xl"></i>
+<span class="block text-xs mt-1">Announcements</span>
+</a>
+</div>
+</div>
+</article>
+<article class="bg-white rounded-xl shadow-md overflow-hidden flex flex-col" data-purpose="course-card">
+<div class="p-6 text-white card-header-bg bg-iomp-card-maroon bg-map-pattern">
+<h2 class="text-xl font-bold">LIT303: Modernist Literature</h2>
+<p class="text-sm mt-1 opacity-90">Dr. Toni Morrison</p>
+<img alt="Dr. Toni Morrison" class="absolute bottom-[-40px] right-6 h-20 w-20 rounded-full border-4 border-white shadow-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6tRw2-6l7eLxf90CmVT2xBgQ09_zE3_vEg5ZNoawbeimH2xIr6PKBWjzzQAZfnOfEUKsVa_-iGl0fsDjCV6fxkync--kV-rTX6PWcIaqw5HZW2rYRzjgxDPCiFIYCYxyfqEkoDaEbxxWeNA_haFj-p2Bfg4O8Z1cQC22P4NnGx2K8gDRCHCNUzpQxRcRO39Uz8VN2RY2lLVT0gSu9yGOSkBH-bAjtadY5oDoZWb159RD4m0aShbVYcJ7Glq1KfcAyb4mGGlpOl_7f"/>
+</div>
+<div class="h-10 bg-white"></div>
+<div class="p-6 bg-white flex-grow">
+<div class="flex justify-around text-center text-iomp-card-text">
+<a class="hover:text-iomp-card-maroon" href="#">
+<i class="fas fa-book-open text-2xl"></i>
+<span class="block text-xs mt-1">Materials</span>
+</a>
+<a class="hover:text-iomp-card-maroon" href="#">
+<i class="fas fa-tasks text-2xl"></i>
+<span class="block text-xs mt-1">Assignments</span>
+</a>
+<a class="hover:text-iomp-card-maroon" href="#">
+<i class="fas fa-bullhorn text-2xl"></i>
+<span class="block text-xs mt-1">Announcements</span>
+</a>
+</div>
+</div>
+</article>
+<article class="bg-white rounded-xl shadow-md overflow-hidden flex flex-col" data-purpose="course-card">
+<div class="p-6 text-white card-header-bg bg-iomp-card-green bg-map-pattern">
+<h2 class="text-xl font-bold">CHEM402: Quantum Chemistry</h2>
+<p class="text-sm mt-1 opacity-90">Prof. Linus Pauling</p>
+<img alt="Prof. Linus Pauling" class="absolute bottom-[-40px] right-6 h-20 w-20 rounded-full border-4 border-white shadow-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDG8PQaF_a7jtgCjvjxbDFrOESOBk0Iug76tWzp28qnqHWL4bYIrmPHn2iqpwvPQVm76sKVDIqtJ2hSPsboTUHokJr2cAIA51J8-74c2ZOh546DuHBWmDpu3o1_o8K5wvKPS49UTL7wPxo_OPKX7E3DWZuEpkuw-rc8HOJXvLzsXyz9JD8_D-BTUkqf1eq28gKhRYioQu9fSeePDzdTWVYzL3KS7C7FHoVBnkOkxs6DwfkK9CgSXDdxdo3c4_L7IwS1jmndt6TxfepF"/>
+</div>
+<div class="h-10 bg-white"></div>
+<div class="p-6 bg-white flex-grow">
+<div class="flex justify-around text-center text-iomp-card-text">
+<a class="hover:text-iomp-card-green" href="#">
+<i class="fas fa-book-open text-2xl"></i>
+<span class="block text-xs mt-1">Materials</span>
+</a>
+<a class="hover:text-iomp-card-green" href="#">
+<i class="fas fa-tasks text-2xl"></i>
+<span class="block text-xs mt-1">Assignments</span>
+</a>
+<a class="hover:text-iomp-card-green" href="#">
+<i class="fas fa-bullhorn text-2xl"></i>
+<span class="block text-xs mt-1">Announcements</span>
+</a>
+</div>
+</div>
+</article>
+<article class="bg-white rounded-xl shadow-md overflow-hidden flex flex-col" data-purpose="course-card">
+<div class="p-6 text-white card-header-bg bg-iomp-card-blue bg-map-pattern">
+<h2 class="text-xl font-bold">SOC310: Urban Sociology</h2>
+<p class="text-sm mt-1 opacity-90">Dr. Robert Park</p>
+<img alt="Dr. Robert Park" class="absolute bottom-[-40px] right-6 h-20 w-20 rounded-full border-4 border-white shadow-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrvRU-swJ-JNzk-rx1FLBsgbXc36YiXevDuaWA-kJ7sPHkhH6EPcX9WCU2-QOtp6hhBVkIFFrAX07i9k9CTsUr6I6B0UisFWEob_OVUO2BWB30GDWRJqoPwzCO7ilzjijAu-45WsedYMIqrqJEoAP4wQJvbteLOdWriOhOeiH0D8ADonxAOXD7Y9Rbl0IaWs0IUhIXtw8Ll9InhEnAja01YSR8nqyxB1yLgm6vhC_ItjUe0iOjQhAHPZ0sZUVbjOfGjjODGaB-FkEV"/>
+</div>
+<div class="h-10 bg-white"></div>
+<div class="p-6 bg-white flex-grow">
+<div class="flex justify-around text-center text-iomp-card-text">
+<a class="hover:text-iomp-card-blue" href="#">
+<i class="fas fa-book-open text-2xl"></i>
+<span class="block text-xs mt-1">Materials</span>
+</a>
+<a class="hover:text-iomp-card-blue" href="#">
+<i class="fas fa-tasks text-2xl"></i>
+<span class="block text-xs mt-1">Assignments</span>
+</a>
+<a class="hover:text-iomp-card-blue" href="#">
+<i class="fas fa-bullhorn text-2xl"></i>
+<span class="block text-xs mt-1">Announcements</span>
+</a>
+</div>
+</div>
+</article>
+<article class="bg-white rounded-xl shadow-md overflow-hidden flex flex-col" data-purpose="course-card">
+<div class="p-6 text-white card-header-bg bg-iomp-card-maroon bg-map-pattern">
+<h2 class="text-xl font-bold">MATH404: Abstract Algebra</h2>
+<p class="text-sm mt-1 opacity-90">Prof. Emmy Noether</p>
+<img alt="Prof. Emmy Noether" class="absolute bottom-[-40px] right-6 h-20 w-20 rounded-full border-4 border-white shadow-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8v8KkMUfmGAScRlv2sCk2gK3zr7vitO7ByaGXl-_Kn_SSsnMdlgtXzfUNrKZakQLegy_1zPcelv15aOKyKEW9XZ3TeKf3l9kJj5-dFoE17aOW1UBwVaEZEdzKmR5RHNK-6qIB6htsw2MMRU2GjOv6nbd9XYE-37mH_f0uW-wb6tenj8SytsQU1LrIJKYcNPvJNb9AQu1Pe49vn-WuMPavYFWItGt5yy0ZPcaKKQ-XFF7ISt5zHv94qKL_fC_xRvGfLhxrJ7NP_Ljm"/>
+</div>
+<div class="h-10 bg-white"></div>
+<div class="p-6 bg-white flex-grow">
+<div class="flex justify-around text-center text-iomp-card-text">
+<a class="hover:text-iomp-card-maroon" href="#">
+<i class="fas fa-book-open text-2xl"></i>
+<span class="block text-xs mt-1">Materials</span>
+</a>
+<a class="hover:text-iomp-card-maroon" href="#">
+<i class="fas fa-tasks text-2xl"></i>
+<span class="block text-xs mt-1">Assignments</span>
+</a>
+<a class="hover:text-iomp-card-maroon" href="#">
+<i class="fas fa-bullhorn text-2xl"></i>
+<span class="block text-xs mt-1">Announcements</span>
+</a>
+</div>
+</div>
+</article>
+<article class="bg-white rounded-xl shadow-md overflow-hidden flex flex-col" data-purpose="course-card">
+<div class="p-6 text-white card-header-bg bg-iomp-card-blue bg-map-pattern">
+<h2 class="text-xl font-bold">MATH402: Counseled Ethics</h2>
+<p class="text-sm mt-1 opacity-90">Prof. Immanuel Kant</p>
+<img alt="Prof. Immanuel Kant" class="absolute bottom-[-40px] right-6 h-20 w-20 rounded-full border-4 border-white shadow-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWrWhUkA6JKaBg2u335o-wJa1hatvfOOOZoFgXL-_vTQvCpZ3v9TrNm6tjPyIO6J5TsCCiUohocMadipwB9dkJlh0bUDrHYVAobn_UWXw3JTTjO6I4pYDtPQOLofIb6WBzK6Hhfe-wdunHuqTL8iGQ3ihPx0Jfdyyy-j1EGzvBErtj5wTlGmLz3gW4ytK9zpl6_6TlYGd2sgIb-S6Q_zfPDzIdRea7JlbC17vmAVL4YIR7FbIXgTof-hrVo40gcG4hjlXWYLEyQy"/>
+</div>
+<div class="h-10 bg-white"></div>
+<div class="p-6 bg-white flex-grow">
+<div class="flex justify-around text-center text-iomp-card-text">
+<a class="hover:text-iomp-card-blue" href="#">
+<i class="fas fa-book-open text-2xl"></i>
+<span class="block text-xs mt-1">Materials</span>
+</a>
+<a class="hover:text-iomp-card-blue" href="#">
+<i class="fas fa-tasks text-2xl"></i>
+<span class="block text-xs mt-1">Assignments</span>
+</a>
+<a class="hover:text-iomp-card-blue" href="#">
+<i class="fas fa-bullhorn text-2xl"></i>
+<span class="block text-xs mt-1">Announcements</span>
+</a>
+</div>
+</div>
+</article>
+<article class="bg-white rounded-xl shadow-md overflow-hidden flex flex-col" data-purpose="course-card">
+<div class="p-6 text-white card-header-bg bg-iomp-card-green bg-map-pattern">
+<h2 class="text-xl font-bold">HIST100: World History</h2>
+<p class="text-sm mt-1 opacity-90">Prof. Howard Zinn</p>
+<img alt="Prof. Howard Zinn" class="absolute bottom-[-40px] right-6 h-20 w-20 rounded-full border-4 border-white shadow-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDO6xE9VvbxA7z77iORFfCKJsBhQ48qaYbiMJghDEMsUOKGusSD5c1b0KDKDOP96y4Vc1I_GbG7dubWbkgVF6d9MdncIDOTTB2aeNkdbPeV0jlg58-aB2kPvdfWlIIXk8XPdhMV_KEoJPLWMBFsdFQgkETefNXeOq5BmwkuNo8T4ZwypBQzpWvI88eQXxzUNdkQbvflV0uKRQVzBO_MG3RjkpmRNIGl3J7Ndcv-W5KvyFkQZ-4sxAloObAdPMes1igx8A12nXv0Glzb"/>
+</div>
+<div class="h-10 bg-white"></div>
+<div class="p-6 bg-white flex-grow">
+<div class="flex justify-around text-center text-iomp-card-text">
+<a class="hover:text-iomp-card-green" href="#">
+<i class="fas fa-book-open text-2xl"></i>
+<span class="block text-xs mt-1">Materials</span>
+</a>
+<a class="hover:text-iomp-card-green" href="#">
+<i class="fas fa-tasks text-2xl"></i>
+<span class="block text-xs mt-1">Assignments</span>
+</a>
+<a class="hover:text-iomp-card-green" href="#">
+<i class="fas fa-bullhorn text-2xl"></i>
+<span class="block text-xs mt-1">Announcements</span>
+</a>
+</div>
+</div>
+</article>
+<article class="bg-white rounded-xl shadow-md overflow-hidden flex flex-col" data-purpose="course-card">
+<div class="p-6 text-white card-header-bg bg-iomp-card-maroon bg-map-pattern">
+<h2 class="text-xl font-bold">ENGINEERING Physics III</h2>
+<p class="text-sm mt-1 opacity-90">Prof. Richard Feynman</p>
+<img alt="Prof. Richard Feynman" class="absolute bottom-[-40px] right-6 h-20 w-20 rounded-full border-4 border-white shadow-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDEQxGGDmkb7LC0s445K6fLT6XgZS_OmTRnfJVAbRxdb3AOnw_rPRg3T9YrVtj9pUZaK0G92s8d5lsdFjx-1UHreIXQB9lrKKfvZpknuVNOeDhc5yfX7SsMWhraxU5UleSTR7IhIuC_wDBBFnNRn90g1br5RBSqCU4OYJn_KxdJ2UFsd3lv1ybksBkKYUFyd-_aLVhTlSSi9RkjL547r406i1kTjGJHoEN4eaUGuWqii5W8UAPcrdbMPb0XbNwv4PwrGR1WpYbfQ1f-"/>
+</div>
+<div class="h-10 bg-white"></div>
+<div class="p-6 bg-white flex-grow">
+<div class="flex justify-around text-center text-iomp-card-text">
+<a class="hover:text-iomp-card-maroon" href="#">
+<i class="fas fa-book-open text-2xl"></i>
+<span class="block text-xs mt-1">Materials</span>
+</a>
+<a class="hover:text-iomp-card-maroon" href="#">
+<i class="fas fa-tasks text-2xl"></i>
+<span class="block text-xs mt-1">Assignments</span>
+</a>
+<a class="hover:text-iomp-card-maroon" href="#">
+<i class="fas fa-bullhorn text-2xl"></i>
+<span class="block text-xs mt-1">Announcements</span>
+</a>
+</div>
+</div>
+</article>
+</div>
+</main>
+</div>
+
+</body></html>
