@@ -1,0 +1,55 @@
+<!-- Bottom-right hover button -->
+<div id="chatTrigger" class="fixed bottom-5 right-5 w-14 h-14 bg-blue-600 text-white rounded-full flex items-center justify-center cursor-pointer shadow-lg hover:bg-blue-700 transition">
+  <i class="fas fa-comment"></i>
+</div>
+
+<!-- Chat panel -->
+<div id="chatPanel" class="fixed bottom-20 right-5 w-80 h-96 bg-white rounded-lg shadow-2xl hidden flex-col">
+  <div class="flex justify-between items-center p-3 border-b">
+    <span class="font-semibold text-sm">IOMP Assistant</span>
+    <button onclick="toggleChat()" class="text-gray-500 hover:text-black">&times;</button>
+  </div>
+
+  <div id="chatBox" class="flex-1 overflow-y-auto p-3 space-y-2 text-sm"></div>
+
+  <form id="chatForm" class="p-3 border-t flex gap-2">
+    <input id="chatInput" required class="flex-1 px-2 py-1 border rounded" placeholder="Ask anything…">
+    <button class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700">Send</button>
+  </form>
+</div>
+
+<script>
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  let visible = false;
+
+  function toggleChat() {
+    visible = !visible;
+    document.getElementById('chatPanel').classList.toggle('hidden', !visible);
+  }
+
+  document.getElementById('chatTrigger').onclick = toggleChat;
+
+  document.getElementById('chatForm').onsubmit = async (e) => {
+    e.preventDefault();
+    const msg = document.getElementById('chatInput').value;
+    addBubble(msg, 'user');
+    document.getElementById('chatInput').value = '';
+
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({message: msg, role: user.role || 'student', name: user.name || 'User'})
+    });
+    const data = await res.json();
+    addBubble(data.reply, 'bot');
+  };
+
+  function addBubble(text, sender) {
+    const box = document.getElementById('chatBox');
+    const div = document.createElement('div');
+    div.className = sender === 'user' ? 'text-right' : 'text-left';
+    div.innerHTML = `<span class="inline-block px-3 py-1 rounded ${sender === 'user' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-black'}">${text}</span>`;
+    box.appendChild(div);
+    box.scrollTop = box.scrollHeight;
+  }
+</script>

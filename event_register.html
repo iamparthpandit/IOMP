@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register for Event</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+  <div class="max-w-2xl mx-auto mt-10 bg-white rounded-xl shadow p-6">
+    <h2 class="text-xl font-bold mb-4" id="eventTitle">Loading...</h2>
+    <form id="registerForm" class="space-y-4">
+      <input type="hidden" id="eventId">
+      
+      <label class="block">Full Name*
+        <input required id="name" class="w-full mt-1 p-2 border rounded">
+      </label>
+
+      <label class="block">Email*
+        <input required type="email" id="email" class="w-full mt-1 p-2 border rounded">
+      </label>
+
+      <label class="block">Phone
+        <input type="tel" id="phone" class="w-full mt-1 p-2 border rounded">
+      </label>
+
+      <label class="block">Dietary Requirements
+        <textarea id="dietary" rows="2" class="w-full mt-1 p-2 border rounded"></textarea>
+      </label>
+
+      <label class="block">Accessibility Needs
+        <textarea id="accessibility" rows="2" class="w-full mt-1 p-2 border rounded"></textarea>
+      </label>
+
+      <div class="flex justify-end gap-2">
+        <button type="button" onclick="window.history.back()" class="px-4 py-2 bg-gray-200 rounded">Cancel</button>
+        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">Register</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    // Parse ?event=ID from URL
+    const params = new URLSearchParams(window.location.search);
+    const eventId = params.get('event');
+    if (!eventId) { alert("No event selected"); window.history.back(); }
+
+    document.getElementById('eventId').value = eventId;
+
+    // Prefill user info if logged in
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    if (user.name)  document.getElementById('name').value  = user.name;
+    if (user.email) document.getElementById('email').value = user.email;
+
+    // Load event title
+    fetch(`/api/events/${eventId}`)
+      .then(r => r.json())
+      .then(d => {
+        if (d.success) {
+          document.getElementById('eventTitle').textContent = `Register for: ${d.event.title}`;
+        } else {
+          document.getElementById('eventTitle').textContent = 'Event not found';
+        }
+      })
+      .catch(() => document.getElementById('eventTitle').textContent = 'Error loading event');
+
+    // Submit registration
+    document.getElementById('registerForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert("Please login to register");
+        window.location.href = "/login.html";
+        return;
+      }
+
+      const payload = {
+        phone: document.getElementById('phone').value,
+        dietary_requirements: document.getElementById('dietary').value,
+        accessibility_needs: document.getElementById('accessibility').value
+      };
+
+      const res = await fetch(`/api/events/${eventId}/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await res.json();
+      if (res.ok && data.success) {
+        alert("✅ Registration successful!");
+        window.location.href = "/events.html"; // back to events list
+      } else {
+        alert(`❌ Registration failed: ${data.message || 'Unknown error'}`);
+      }
+    });
+  </script>
+</body>
+</html>

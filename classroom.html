@@ -9,11 +9,16 @@
           theme: {
             extend: {
               colors: {
+                "iomp-blue": {dark: "#1e3a8a", light: "#3b82f6"},
+                "custom-bg": "#f0f2f5",
+                primary: "#135bec",
+                "background-light": "#f6f6f8",
+                "background-dark": "#101622",
                 'iomp-sidebar': '#ffffff',
                 'iomp-main-bg': '#f0f2f5',
-                'iomp-active-nav': '#2c3e50',
+                'iomp-active-nav': '#1e3a8a', // Updated to match iomp-blue.dark
                 'iomp-nav-text': '#374151',
-                'iomp-card-body': '#f7f2e9', // Beige-like color
+                'iomp-card-body': '#f7f2e9',
                 'iomp-card-blue': '#2c3e50',
                 'iomp-card-green': '#166534',
                 'iomp-card-maroon': '#881337',
@@ -22,6 +27,7 @@
               },
               fontFamily: {
                 sans: ['Inter', 'sans-serif'],
+                display: "Lexend"
               },
               backgroundImage: {
                 'map-pattern': "url('https://www.transparenttextures.com/patterns/clean-gray-paper.png')",
@@ -32,6 +38,119 @@
           }
         }
     </script>
+    <style>
+      /* Profile Dropdown Styles */
+      .profile-dropdown {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        margin-top: 8px;
+        width: 350px;
+        background: #2d3748;
+        border-radius: 12px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
+        transition: all 0.3s ease;
+        z-index: 1000;
+        color: white;
+      }
+      
+      .profile-dropdown.active {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+      
+      .profile-dropdown-item {
+        padding: 12px 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        cursor: pointer;
+        transition: background 0.2s ease;
+        border-radius: 8px;
+        margin: 4px 8px;
+      }
+      
+      .profile-dropdown-item:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+      
+      .profile-dropdown-section {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 8px 0;
+      }
+      
+      .profile-dropdown-header {
+        padding: 20px;
+        text-align: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      
+      .profile-avatar-large {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        margin: 0 auto 12px;
+        object-fit: cover;
+      }
+      
+      /* Notification Panel */
+      .notification-panel {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        margin-top: 8px;
+        width: 380px;
+        max-height: 500px;
+        overflow-y: auto;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
+        transition: all 0.3s ease;
+        z-index: 1000;
+      }
+      
+      .notification-panel.active {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+      
+      .notification-item {
+        padding: 16px;
+        border-bottom: 1px solid #f0f0f0;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      
+      .notification-item:hover {
+        background: #f9fafb;
+      }
+      
+      .notification-item.unread {
+        background: #eff6ff;
+      }
+      
+      .notification-badge {
+        position: absolute;
+        top: -4px;
+        right: -4px;
+        background: #ef4444;
+        color: white;
+        font-size: 10px;
+        font-weight: bold;
+        padding: 2px 6px;
+        border-radius: 10px;
+        min-width: 18px;
+        text-align: center;
+      }
+    </style>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
 <style data-purpose="layout-and-card-styles">
         .card-header-bg {
@@ -59,43 +178,52 @@
 <body class="bg-iomp-main-bg font-sans">
 <div class="flex h-screen" data-purpose="app-container">
 <aside class="w-64 bg-iomp-sidebar border-r border-gray-200 flex flex-col fixed h-full">
-<div class="flex items-center justify-start p-6 border-b border-gray-200">
-<div class="flex h-10 w-10 mr-3 rounded items-center justify-center bg-iomp-active-nav text-white">
-<i class="fas fa-book text-2xl"></i>
-</div>
+<div class="flex items-center justify-between h-16 px-6 border-b border-gray-200">
+<div class="flex items-center">
+<button onclick="window.location.href='/'" class="text-gray-600 hover:text-gray-900 mr-3" title="Back to Home">
+<i class="fas fa-arrow-left text-xl"></i>
+</button>
+<img alt="IOMP Logo" class="h-8 w-8 mr-2" src="/IOMP_LOGO.png"/>
 <span class="text-2xl font-bold text-gray-800">IOMP</span>
+</div>
 </div>
 <nav class="flex-grow pt-6">
 <ul>
 <li>
-<a class="flex items-center px-6 py-3 text-iomp-nav-text hover:bg-gray-100" href="#">
+<a class="flex items-center px-6 py-3 text-iomp-nav-text hover:bg-gray-100" href="/">
 <i class="fas fa-home w-6 text-center text-lg"></i>
 <span class="ml-4 font-medium">Home</span>
 </a>
 </li>
 <li>
-<a class="flex items-center px-6 py-3 text-iomp-nav-text hover:bg-gray-100" href="#">
+<a class="flex items-center px-6 py-3 text-iomp-nav-text hover:bg-gray-100" href="/profile">
 <i class="fas fa-user w-6 text-center text-lg"></i>
 <span class="ml-4 font-medium">Profile</span>
 </a>
 </li>
 <li>
-<a class="flex items-center px-6 py-3 text-white bg-iomp-active-nav rounded-lg mx-3" href="#">
+<a class="flex items-center px-6 py-3 text-white bg-iomp-active-nav rounded-lg mx-3" href="/classroom.html">
 <i class="fas fa-chalkboard-teacher w-6 text-center text-lg"></i>
 <span class="ml-4 font-medium">Classrooms</span>
 </a>
 </li>
 <li>
-<a class="flex items-center px-6 py-3 text-iomp-nav-text hover:bg-gray-100" href="#">
+<a class="flex items-center px-6 py-3 text-iomp-nav-text hover:bg-gray-100" href="/calendar">
 <i class="fas fa-calendar-alt w-6 text-center text-lg"></i>
 <span class="ml-4 font-medium">Events Calendar</span>
 </a>
 </li>
 <li>
-<a class="flex items-center px-6 py-3 text-iomp-nav-text hover:bg-gray-100" href="#">
+<a class="flex items-center px-6 py-3 text-iomp-nav-text hover:bg-gray-100" href="/messages">
 <i class="fas fa-inbox w-6 text-center text-lg"></i>
 <span class="ml-4 font-medium">Inbox</span>
 </a>
+</li>
+<li class="mt-4 border-t border-gray-200 pt-4">
+<button id="logoutBtn" class="flex items-center w-full px-6 py-3 text-red-600 hover:bg-red-50 hover:text-red-700 transition">
+<i class="fas fa-sign-out-alt w-6 text-center text-lg"></i>
+<span class="ml-4 font-medium">Logout</span>
+</button>
 </li>
 </ul>
 </nav>
@@ -103,18 +231,92 @@
 <main class="flex-1 ml-64 p-8">
 <header class="mb-8">
 <div class="flex justify-between items-center mb-6">
+<div class="flex items-center">
+<button onclick="window.location.href='/'" class="lg:hidden text-gray-500 hover:text-gray-800 mr-4">
+<i class="fas fa-arrow-left text-xl"></i>
+</button>
 <h1 class="text-3xl font-bold text-gray-800">Classrooms</h1>
-<div class="flex items-center space-x-6">
-<button class="text-gray-500 hover:text-gray-800">
+</div>
+<div class="flex items-center space-x-4">
+    <button id="createClassroomBtn" class="hidden bg-iomp-blue-light hover:bg-iomp-blue-dark text-white px-4 py-2 rounded-lg transition shadow-sm flex items-center">
+        <i class="fas fa-plus mr-2"></i> Create Classroom
+    </button>
+    <div class="flex items-center space-x-6">
+<!-- Settings Button -->
+<button id="settingsBtn" class="text-gray-500 hover:text-gray-800 transition" title="Settings">
 <i class="fas fa-cog text-xl"></i>
 </button>
-<button class="relative text-gray-500 hover:text-gray-800">
+
+<!-- Notification Button -->
+<div class="relative">
+<button id="notificationBtn" class="relative text-gray-500 hover:text-gray-800 transition" title="Notifications">
 <i class="fas fa-bell text-xl"></i>
-<span class="absolute top-0 right-0 h-2 w-2 bg-iomp-orange rounded-full"></span>
+<span id="notificationBadge" class="notification-badge" style="display: none;">0</span>
 </button>
-<div class="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
-<i class="fas fa-user text-gray-500 text-xl"></i>
+<!-- Notification Panel -->
+<div id="notificationPanel" class="notification-panel">
+<div class="p-4 border-b border-gray-200 flex items-center justify-between sticky top-0 bg-white">
+<h3 class="font-bold text-lg">Notifications</h3>
+<button id="markAllRead" class="text-sm text-iomp-blue-light hover:underline">Mark all as read</button>
 </div>
+<div id="notificationList" class="divide-y divide-gray-100">
+<!-- Notifications loaded here -->
+</div>
+<div class="p-4 text-center border-t">
+<button onclick="window.location.href='/events'" class="text-iomp-blue-light hover:underline text-sm font-medium">View all events</button>
+</div>
+</div>
+</div>
+
+<!-- User Profile -->
+<div class="relative">
+<img id="headerUserAvatar" alt="User Avatar" class="h-10 w-10 rounded-full object-cover cursor-pointer hover:opacity-80 transition" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJ7alwZ4VtU9QjSG7VKafpieuWwNgPDgp2Y4KxAjlKwzhLF9QwtgPuE_RxEueIXjzAiJU3DrN2mg8myDX5Rfxgw2ifFs1p5OCij9LY2ZGhTKIh0kYMHHC3Mtg1ufz4cR_l1c73jMMIalIAWIrN_SQWZVBn-C9kHQB0yE-qHi9Fo1cK2mGRyJk9nbq4IFvGPJGk4WnaxiN08atgc4Ee_rrBwEKGkl90Fub5d2GJsgmGbs3F0VpIEi4oxFCGFJO761a2Q4R5x811WzyZ"/>
+<!-- Profile Dropdown -->
+<div id="profileDropdown" class="profile-dropdown">
+<div class="profile-dropdown-header">
+<img id="dropdownAvatar" class="profile-avatar-large" src="" alt="Profile Picture">
+<h3 id="dropdownName" class="text-lg font-semibold">User Name</h3>
+<p id="dropdownEmail" class="text-sm text-gray-300 mt-1">user@email.com</p>
+</div>
+<div class="profile-dropdown-section">
+<div class="profile-dropdown-item" onclick="window.location.href='/profile'">
+<i class="fas fa-key text-gray-300 text-lg"></i>
+<span>Profile Settings</span>
+</div>
+<div class="profile-dropdown-item" onclick="alert('Account management coming soon')">
+<i class="fab fa-google text-gray-300 text-lg"></i>
+<span>Manage your Account</span>
+</div>
+<div class="profile-dropdown-item" onclick="window.location.href='/profile'">
+<i class="fas fa-edit text-gray-300 text-lg"></i>
+<span>Customise profile</span>
+</div>
+<div class="profile-dropdown-item">
+<i class="fas fa-sync text-green-400 text-lg"></i>
+<span>Sync is on</span>
+</div>
+</div>
+<div class="profile-dropdown-section">
+<p class="text-xs text-gray-400 px-4 py-2 font-semibold">OTHER PROFILES</p>
+<div id="otherProfilesList"></div>
+<div class="profile-dropdown-item" onclick="alert('Add profile feature coming soon')">
+<i class="fas fa-user-plus text-gray-300 text-lg"></i>
+<span>Add Profile</span>
+</div>
+<div class="profile-dropdown-item" onclick="alert('Guest profile coming soon')">
+<i class="fas fa-user-secret text-gray-300 text-lg"></i>
+<span>Open guest profile</span>
+</div>
+</div>
+<div class="profile-dropdown-section" style="border-bottom: none;">
+<div class="profile-dropdown-item" id="dropdownLogout">
+<i class="fas fa-sign-out-alt text-red-400 text-lg"></i>
+<span class="text-red-400">Sign out</span>
+</div>
+</div>
+</div>
+</div>
+
 </div>
 </div>
 <div class="flex justify-between items-center">
@@ -132,225 +334,689 @@
 </div>
 </div>
 </header>
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-<article class="bg-white rounded-xl shadow-md overflow-hidden flex flex-col" data-purpose="course-card">
-<div class="p-6 text-white card-header-bg bg-iomp-card-blue bg-map-pattern">
-<h2 class="text-xl font-bold">ASTR405: Cosmology &amp; Astrophysics</h2>
-<p class="text-sm mt-1 opacity-90">Dr. Vera Rubin</p>
-<img alt="Dr. Vera Rubin" class="absolute bottom-[-40px] right-6 h-20 w-20 rounded-full border-4 border-white shadow-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCFdWjG7RomfscYKSpp2D06xx81t-Y4rjrJ-2xRDy5WcJJ96vgJsfmV7WtCw4JaLB3dPgAztTw7fYzGFbWxKKBoy2m0tDrDsNQy_L2QoKVOc-tCqlgT1cnxU3hesWIKymh2RzsiMa1ddDkIvzPL1vLdkUt2JB2c68WFpEEL6unaptYR9nVG39_CWS6LMx25R9_ktxX7I0u9ZIwODhBbYKLIMTFo3ldZagyWEcPjkzbdmb3zJI7WgHX7zX4ujZcVTY3ogrDUAIDI2PC-"/>
+
+<!-- Classroom Grid -->
+<div id="classroomGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <!-- Classrooms will be loaded here -->
 </div>
-<div class="h-10 bg-white"></div>
-<div class="p-6 bg-white flex-grow">
-<div class="flex justify-around text-center text-iomp-card-text">
-<a class="hover:text-iomp-card-blue" href="#">
-<i class="fas fa-book-open text-2xl"></i>
-<span class="block text-xs mt-1">Materials</span>
-</a>
-<a class="hover:text-iomp-card-blue" href="#">
-<i class="fas fa-tasks text-2xl"></i>
-<span class="block text-xs mt-1">Assignments</span>
-</a>
-<a class="hover:text-iomp-card-blue" href="#">
-<i class="fas fa-bullhorn text-2xl"></i>
-<span class="block text-xs mt-1">Announcements</span>
-</a>
+
+<!-- Create Classroom Modal -->
+<div id="createClassroomModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-md p-6 transform transition-all scale-100">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-2xl font-bold text-gray-800">Create New Classroom</h3>
+            <button class="close-modal text-gray-500 hover:text-gray-700">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+        <form id="createClassroomForm" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Class Name</label>
+                <input type="text" name="name" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-iomp-blue-light focus:border-transparent" placeholder="e.g. CS101: Intro to CS">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Class Code</label>
+                <input type="text" name="code" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-iomp-blue-light focus:border-transparent" placeholder="e.g. CS101">
+                <p class="text-xs text-gray-500 mt-1">Unique code for students to join this class.</p>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                <textarea name="description" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-iomp-blue-light focus:border-transparent" placeholder="Brief description of the class..."></textarea>
+            </div>
+            <div class="flex justify-end space-x-3 pt-4">
+                <button type="button" class="close-modal px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition">Cancel</button>
+                <button type="submit" class="px-6 py-2 bg-iomp-blue-light hover:bg-iomp-blue-dark text-white rounded-lg transition shadow-md">Create</button>
+            </div>
+        </form>
+    </div>
 </div>
+
+<!-- Classroom Details Modal -->
+<div id="classroomDetailsModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 overflow-y-auto py-10">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-4xl p-0 transform transition-all scale-100 my-auto">
+        <!-- Header -->
+        <div class="relative h-32 bg-iomp-blue-dark rounded-t-xl p-6 flex items-end justify-between">
+            <div class="text-white">
+                <h2 id="detailsClassName" class="text-3xl font-bold">Class Name</h2>
+                <p id="detailsClassTeacher" class="text-blue-100 mt-1">Teacher Name</p>
+            </div>
+            <div class="flex items-center space-x-2">
+                <button id="deleteClassroomBtn" class="hidden bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm transition flex items-center shadow-sm">
+                    <i class="fas fa-trash-alt mr-2"></i> Delete Class
+                </button>
+                <button class="close-details text-white hover:text-gray-200 bg-black bg-opacity-20 hover:bg-opacity-30 rounded-full p-2 w-8 h-8 flex items-center justify-center transition">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Content -->
+        <div class="p-6">
+            <!-- Tabs -->
+            <div class="flex border-b border-gray-200 mb-6">
+                <button class="tab-btn active px-6 py-3 text-iomp-blue-dark border-b-2 border-iomp-blue-dark font-medium" data-tab="materials">Materials</button>
+                <button class="tab-btn px-6 py-3 text-gray-500 hover:text-gray-700 font-medium" data-tab="assignments">Assignments</button>
+            </div>
+            
+            <!-- Materials Tab -->
+            <div id="materialsTab" class="tab-content block">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-bold text-gray-800">Course Materials</h3>
+                    <button id="addMaterialBtn" class="hidden bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm transition flex items-center">
+                        <i class="fas fa-upload mr-2"></i> Upload Material
+                    </button>
+                </div>
+                <div id="materialsList" class="space-y-3">
+                    <!-- Materials loaded here -->
+                </div>
+            </div>
+            
+            <!-- Assignments Tab -->
+            <div id="assignmentsTab" class="tab-content hidden">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-bold text-gray-800">Assignments</h3>
+                    <button id="addAssignmentBtn" class="hidden bg-iomp-blue-light hover:bg-iomp-blue-dark text-white px-4 py-2 rounded-lg text-sm transition flex items-center">
+                        <i class="fas fa-plus mr-2"></i> New Assignment
+                    </button>
+                </div>
+                <div id="assignmentsList" class="space-y-4">
+                    <!-- Assignments loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-</article>
-<article class="bg-white rounded-xl shadow-md overflow-hidden flex flex-col" data-purpose="course-card">
-<div class="p-6 text-white card-header-bg bg-iomp-card-green bg-map-pattern">
-<h2 class="text-xl font-bold">PHIL301: Advanced Ethics</h2>
-<p class="text-sm mt-1 opacity-90">Prof. Martha Nussbaum</p>
-<img alt="Prof. Martha Nussbaum" class="absolute bottom-[-40px] right-6 h-20 w-20 rounded-full border-4 border-white shadow-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3B-yHISXuigKk0oEZuVi1spr3cjoJreaHhHdW_MY5uY_V7ct6p93noX-3ZNOA56aUa81Pjk9_05W-UqIEDoLG2JHBaoYL8kDvh0n-73IBRGmGpDUxvJC1Z2IVGeY3IDUKQvzuaNf1ohUr5tr8jvHzVfk2yKD6UQZ_ho4Qs7v3FHhxHLGSByTIdrzt-iFIQ40hD79e_0yCUPHDnZKRvDDInbi1q4lo_4K05a9cuPUsCKDoi7Y7zKcwPVDO6glVpdQmvWUq_tRmv9fv"/>
+
+<!-- Upload Material Modal -->
+<div id="uploadMaterialModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-[60]">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-md p-6">
+        <h3 class="text-xl font-bold text-gray-800 mb-4">Upload Material</h3>
+        <form id="uploadMaterialForm" class="space-y-4">
+            <input type="hidden" id="materialClassId" name="class_id">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                <input type="text" name="title" required class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Select File</label>
+                <input type="file" name="file" required class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+            </div>
+            <div class="flex justify-end space-x-3 pt-4">
+                <button type="button" class="close-upload px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">Cancel</button>
+                <button type="submit" class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg">Upload</button>
+            </div>
+        </form>
+    </div>
 </div>
-<div class="h-10 bg-white"></div>
-<div class="p-6 bg-white flex-grow">
-<div class="flex justify-around text-center text-iomp-card-text">
-<a class="hover:text-iomp-card-green" href="#">
-<i class="fas fa-book-open text-2xl"></i>
-<span class="block text-xs mt-1">Materials</span>
-</a>
-<a class="hover:text-iomp-card-green" href="#">
-<i class="fas fa-tasks text-2xl"></i>
-<span class="block text-xs mt-1">Assignments</span>
-</a>
-<a class="hover:text-iomp-card-green" href="#">
-<i class="fas fa-bullhorn text-2xl"></i>
-<span class="block text-xs mt-1">Announcements</span>
-</a>
+
+<!-- Create Assignment Modal -->
+<div id="createAssignmentModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-[60]">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-md p-6">
+        <h3 class="text-xl font-bold text-gray-800 mb-4">Create Assignment</h3>
+        <form id="createAssignmentForm" class="space-y-4">
+            <input type="hidden" id="assignmentClassId" name="class_id">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                <input type="text" name="title" required class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                <textarea name="description" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg"></textarea>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Due Date</label>
+                <input type="datetime-local" name="due_date" required class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+            </div>
+            <div class="flex justify-end space-x-3 pt-4">
+                <button type="button" class="close-assignment px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">Cancel</button>
+                <button type="submit" class="px-6 py-2 bg-iomp-blue-light hover:bg-iomp-blue-dark text-white rounded-lg">Create</button>
+            </div>
+        </form>
+    </div>
 </div>
-</div>
-</article>
-<article class="bg-white rounded-xl shadow-md overflow-hidden flex flex-col" data-purpose="course-card">
-<div class="p-6 text-white card-header-bg bg-iomp-card-maroon bg-map-pattern">
-<h2 class="text-xl font-bold">LIT303: Modernist Literature</h2>
-<p class="text-sm mt-1 opacity-90">Dr. Toni Morrison</p>
-<img alt="Dr. Toni Morrison" class="absolute bottom-[-40px] right-6 h-20 w-20 rounded-full border-4 border-white shadow-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6tRw2-6l7eLxf90CmVT2xBgQ09_zE3_vEg5ZNoawbeimH2xIr6PKBWjzzQAZfnOfEUKsVa_-iGl0fsDjCV6fxkync--kV-rTX6PWcIaqw5HZW2rYRzjgxDPCiFIYCYxyfqEkoDaEbxxWeNA_haFj-p2Bfg4O8Z1cQC22P4NnGx2K8gDRCHCNUzpQxRcRO39Uz8VN2RY2lLVT0gSu9yGOSkBH-bAjtadY5oDoZWb159RD4m0aShbVYcJ7Glq1KfcAyb4mGGlpOl_7f"/>
-</div>
-<div class="h-10 bg-white"></div>
-<div class="p-6 bg-white flex-grow">
-<div class="flex justify-around text-center text-iomp-card-text">
-<a class="hover:text-iomp-card-maroon" href="#">
-<i class="fas fa-book-open text-2xl"></i>
-<span class="block text-xs mt-1">Materials</span>
-</a>
-<a class="hover:text-iomp-card-maroon" href="#">
-<i class="fas fa-tasks text-2xl"></i>
-<span class="block text-xs mt-1">Assignments</span>
-</a>
-<a class="hover:text-iomp-card-maroon" href="#">
-<i class="fas fa-bullhorn text-2xl"></i>
-<span class="block text-xs mt-1">Announcements</span>
-</a>
-</div>
-</div>
-</article>
-<article class="bg-white rounded-xl shadow-md overflow-hidden flex flex-col" data-purpose="course-card">
-<div class="p-6 text-white card-header-bg bg-iomp-card-green bg-map-pattern">
-<h2 class="text-xl font-bold">CHEM402: Quantum Chemistry</h2>
-<p class="text-sm mt-1 opacity-90">Prof. Linus Pauling</p>
-<img alt="Prof. Linus Pauling" class="absolute bottom-[-40px] right-6 h-20 w-20 rounded-full border-4 border-white shadow-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDG8PQaF_a7jtgCjvjxbDFrOESOBk0Iug76tWzp28qnqHWL4bYIrmPHn2iqpwvPQVm76sKVDIqtJ2hSPsboTUHokJr2cAIA51J8-74c2ZOh546DuHBWmDpu3o1_o8K5wvKPS49UTL7wPxo_OPKX7E3DWZuEpkuw-rc8HOJXvLzsXyz9JD8_D-BTUkqf1eq28gKhRYioQu9fSeePDzdTWVYzL3KS7C7FHoVBnkOkxs6DwfkK9CgSXDdxdo3c4_L7IwS1jmndt6TxfepF"/>
-</div>
-<div class="h-10 bg-white"></div>
-<div class="p-6 bg-white flex-grow">
-<div class="flex justify-around text-center text-iomp-card-text">
-<a class="hover:text-iomp-card-green" href="#">
-<i class="fas fa-book-open text-2xl"></i>
-<span class="block text-xs mt-1">Materials</span>
-</a>
-<a class="hover:text-iomp-card-green" href="#">
-<i class="fas fa-tasks text-2xl"></i>
-<span class="block text-xs mt-1">Assignments</span>
-</a>
-<a class="hover:text-iomp-card-green" href="#">
-<i class="fas fa-bullhorn text-2xl"></i>
-<span class="block text-xs mt-1">Announcements</span>
-</a>
-</div>
-</div>
-</article>
-<article class="bg-white rounded-xl shadow-md overflow-hidden flex flex-col" data-purpose="course-card">
-<div class="p-6 text-white card-header-bg bg-iomp-card-blue bg-map-pattern">
-<h2 class="text-xl font-bold">SOC310: Urban Sociology</h2>
-<p class="text-sm mt-1 opacity-90">Dr. Robert Park</p>
-<img alt="Dr. Robert Park" class="absolute bottom-[-40px] right-6 h-20 w-20 rounded-full border-4 border-white shadow-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrvRU-swJ-JNzk-rx1FLBsgbXc36YiXevDuaWA-kJ7sPHkhH6EPcX9WCU2-QOtp6hhBVkIFFrAX07i9k9CTsUr6I6B0UisFWEob_OVUO2BWB30GDWRJqoPwzCO7ilzjijAu-45WsedYMIqrqJEoAP4wQJvbteLOdWriOhOeiH0D8ADonxAOXD7Y9Rbl0IaWs0IUhIXtw8Ll9InhEnAja01YSR8nqyxB1yLgm6vhC_ItjUe0iOjQhAHPZ0sZUVbjOfGjjODGaB-FkEV"/>
-</div>
-<div class="h-10 bg-white"></div>
-<div class="p-6 bg-white flex-grow">
-<div class="flex justify-around text-center text-iomp-card-text">
-<a class="hover:text-iomp-card-blue" href="#">
-<i class="fas fa-book-open text-2xl"></i>
-<span class="block text-xs mt-1">Materials</span>
-</a>
-<a class="hover:text-iomp-card-blue" href="#">
-<i class="fas fa-tasks text-2xl"></i>
-<span class="block text-xs mt-1">Assignments</span>
-</a>
-<a class="hover:text-iomp-card-blue" href="#">
-<i class="fas fa-bullhorn text-2xl"></i>
-<span class="block text-xs mt-1">Announcements</span>
-</a>
-</div>
-</div>
-</article>
-<article class="bg-white rounded-xl shadow-md overflow-hidden flex flex-col" data-purpose="course-card">
-<div class="p-6 text-white card-header-bg bg-iomp-card-maroon bg-map-pattern">
-<h2 class="text-xl font-bold">MATH404: Abstract Algebra</h2>
-<p class="text-sm mt-1 opacity-90">Prof. Emmy Noether</p>
-<img alt="Prof. Emmy Noether" class="absolute bottom-[-40px] right-6 h-20 w-20 rounded-full border-4 border-white shadow-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8v8KkMUfmGAScRlv2sCk2gK3zr7vitO7ByaGXl-_Kn_SSsnMdlgtXzfUNrKZakQLegy_1zPcelv15aOKyKEW9XZ3TeKf3l9kJj5-dFoE17aOW1UBwVaEZEdzKmR5RHNK-6qIB6htsw2MMRU2GjOv6nbd9XYE-37mH_f0uW-wb6tenj8SytsQU1LrIJKYcNPvJNb9AQu1Pe49vn-WuMPavYFWItGt5yy0ZPcaKKQ-XFF7ISt5zHv94qKL_fC_xRvGfLhxrJ7NP_Ljm"/>
-</div>
-<div class="h-10 bg-white"></div>
-<div class="p-6 bg-white flex-grow">
-<div class="flex justify-around text-center text-iomp-card-text">
-<a class="hover:text-iomp-card-maroon" href="#">
-<i class="fas fa-book-open text-2xl"></i>
-<span class="block text-xs mt-1">Materials</span>
-</a>
-<a class="hover:text-iomp-card-maroon" href="#">
-<i class="fas fa-tasks text-2xl"></i>
-<span class="block text-xs mt-1">Assignments</span>
-</a>
-<a class="hover:text-iomp-card-maroon" href="#">
-<i class="fas fa-bullhorn text-2xl"></i>
-<span class="block text-xs mt-1">Announcements</span>
-</a>
-</div>
-</div>
-</article>
-<article class="bg-white rounded-xl shadow-md overflow-hidden flex flex-col" data-purpose="course-card">
-<div class="p-6 text-white card-header-bg bg-iomp-card-blue bg-map-pattern">
-<h2 class="text-xl font-bold">MATH402: Counseled Ethics</h2>
-<p class="text-sm mt-1 opacity-90">Prof. Immanuel Kant</p>
-<img alt="Prof. Immanuel Kant" class="absolute bottom-[-40px] right-6 h-20 w-20 rounded-full border-4 border-white shadow-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWrWhUkA6JKaBg2u335o-wJa1hatvfOOOZoFgXL-_vTQvCpZ3v9TrNm6tjPyIO6J5TsCCiUohocMadipwB9dkJlh0bUDrHYVAobn_UWXw3JTTjO6I4pYDtPQOLofIb6WBzK6Hhfe-wdunHuqTL8iGQ3ihPx0Jfdyyy-j1EGzvBErtj5wTlGmLz3gW4ytK9zpl6_6TlYGd2sgIb-S6Q_zfPDzIdRea7JlbC17vmAVL4YIR7FbIXgTof-hrVo40gcG4hjlXWYLEyQy"/>
-</div>
-<div class="h-10 bg-white"></div>
-<div class="p-6 bg-white flex-grow">
-<div class="flex justify-around text-center text-iomp-card-text">
-<a class="hover:text-iomp-card-blue" href="#">
-<i class="fas fa-book-open text-2xl"></i>
-<span class="block text-xs mt-1">Materials</span>
-</a>
-<a class="hover:text-iomp-card-blue" href="#">
-<i class="fas fa-tasks text-2xl"></i>
-<span class="block text-xs mt-1">Assignments</span>
-</a>
-<a class="hover:text-iomp-card-blue" href="#">
-<i class="fas fa-bullhorn text-2xl"></i>
-<span class="block text-xs mt-1">Announcements</span>
-</a>
-</div>
-</div>
-</article>
-<article class="bg-white rounded-xl shadow-md overflow-hidden flex flex-col" data-purpose="course-card">
-<div class="p-6 text-white card-header-bg bg-iomp-card-green bg-map-pattern">
-<h2 class="text-xl font-bold">HIST100: World History</h2>
-<p class="text-sm mt-1 opacity-90">Prof. Howard Zinn</p>
-<img alt="Prof. Howard Zinn" class="absolute bottom-[-40px] right-6 h-20 w-20 rounded-full border-4 border-white shadow-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDO6xE9VvbxA7z77iORFfCKJsBhQ48qaYbiMJghDEMsUOKGusSD5c1b0KDKDOP96y4Vc1I_GbG7dubWbkgVF6d9MdncIDOTTB2aeNkdbPeV0jlg58-aB2kPvdfWlIIXk8XPdhMV_KEoJPLWMBFsdFQgkETefNXeOq5BmwkuNo8T4ZwypBQzpWvI88eQXxzUNdkQbvflV0uKRQVzBO_MG3RjkpmRNIGl3J7Ndcv-W5KvyFkQZ-4sxAloObAdPMes1igx8A12nXv0Glzb"/>
-</div>
-<div class="h-10 bg-white"></div>
-<div class="p-6 bg-white flex-grow">
-<div class="flex justify-around text-center text-iomp-card-text">
-<a class="hover:text-iomp-card-green" href="#">
-<i class="fas fa-book-open text-2xl"></i>
-<span class="block text-xs mt-1">Materials</span>
-</a>
-<a class="hover:text-iomp-card-green" href="#">
-<i class="fas fa-tasks text-2xl"></i>
-<span class="block text-xs mt-1">Assignments</span>
-</a>
-<a class="hover:text-iomp-card-green" href="#">
-<i class="fas fa-bullhorn text-2xl"></i>
-<span class="block text-xs mt-1">Announcements</span>
-</a>
-</div>
-</div>
-</article>
-<article class="bg-white rounded-xl shadow-md overflow-hidden flex flex-col" data-purpose="course-card">
-<div class="p-6 text-white card-header-bg bg-iomp-card-maroon bg-map-pattern">
-<h2 class="text-xl font-bold">ENGINEERING Physics III</h2>
-<p class="text-sm mt-1 opacity-90">Prof. Richard Feynman</p>
-<img alt="Prof. Richard Feynman" class="absolute bottom-[-40px] right-6 h-20 w-20 rounded-full border-4 border-white shadow-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDEQxGGDmkb7LC0s445K6fLT6XgZS_OmTRnfJVAbRxdb3AOnw_rPRg3T9YrVtj9pUZaK0G92s8d5lsdFjx-1UHreIXQB9lrKKfvZpknuVNOeDhc5yfX7SsMWhraxU5UleSTR7IhIuC_wDBBFnNRn90g1br5RBSqCU4OYJn_KxdJ2UFsd3lv1ybksBkKYUFyd-_aLVhTlSSi9RkjL547r406i1kTjGJHoEN4eaUGuWqii5W8UAPcrdbMPb0XbNwv4PwrGR1WpYbfQ1f-"/>
-</div>
-<div class="h-10 bg-white"></div>
-<div class="p-6 bg-white flex-grow">
-<div class="flex justify-around text-center text-iomp-card-text">
-<a class="hover:text-iomp-card-maroon" href="#">
-<i class="fas fa-book-open text-2xl"></i>
-<span class="block text-xs mt-1">Materials</span>
-</a>
-<a class="hover:text-iomp-card-maroon" href="#">
-<i class="fas fa-tasks text-2xl"></i>
-<span class="block text-xs mt-1">Assignments</span>
-</a>
-<a class="hover:text-iomp-card-maroon" href="#">
-<i class="fas fa-bullhorn text-2xl"></i>
-<span class="block text-xs mt-1">Announcements</span>
-</a>
-</div>
-</div>
-</article>
-</div>
+
 </main>
 </div>
 
+<script>
+    // DOM Elements
+    const profileDropdown = document.getElementById('profileDropdown');
+    const headerUserAvatar = document.getElementById('headerUserAvatar');
+    const notificationBtn = document.getElementById('notificationBtn');
+    const notificationPanel = document.getElementById('notificationPanel');
+    const notificationBadge = document.getElementById('notificationBadge');
+    const notificationList = document.getElementById('notificationList');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const dropdownLogout = document.getElementById('dropdownLogout');
+    
+    // Classroom Elements
+    const classroomGrid = document.getElementById('classroomGrid');
+    const createClassroomBtn = document.getElementById('createClassroomBtn');
+    const createClassroomModal = document.getElementById('createClassroomModal');
+    const createClassroomForm = document.getElementById('createClassroomForm');
+    
+    // Details Modal Elements
+    const classroomDetailsModal = document.getElementById('classroomDetailsModal');
+    const detailsClassName = document.getElementById('detailsClassName');
+    const detailsClassTeacher = document.getElementById('detailsClassTeacher');
+    const materialsList = document.getElementById('materialsList');
+    const assignmentsList = document.getElementById('assignmentsList');
+    const addMaterialBtn = document.getElementById('addMaterialBtn');
+    const addAssignmentBtn = document.getElementById('addAssignmentBtn');
+    const deleteClassroomBtn = document.getElementById('deleteClassroomBtn');
+    
+    // Sub-modals
+    const uploadMaterialModal = document.getElementById('uploadMaterialModal');
+    const createAssignmentModal = document.getElementById('createAssignmentModal');
+    const uploadMaterialForm = document.getElementById('uploadMaterialForm');
+    const createAssignmentForm = document.getElementById('createAssignmentForm');
+    
+    // State
+    let notifications = [];
+    let currentUser = null;
+    let currentClassId = null;
+    
+    // Profile Dropdown Logic
+    headerUserAvatar.addEventListener('click', (e) => {
+        e.stopPropagation();
+        profileDropdown.classList.toggle('active');
+        notificationPanel.classList.remove('active'); // Close notifications if open
+    });
+    
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!profileDropdown.contains(e.target) && e.target !== headerUserAvatar) {
+            profileDropdown.classList.remove('active');
+        }
+    });
+    
+    // Logout Logic
+    async function handleLogout() {
+        try {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '/login';
+        } catch (error) {
+            console.error('Logout error:', error);
+        }
+    }
+    
+    if(logoutBtn) logoutBtn.addEventListener('click', handleLogout);
+    if(dropdownLogout) dropdownLogout.addEventListener('click', handleLogout);
+    
+    // Load User Data
+    async function loadUserData() {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = '/login';
+            return;
+        }
+    
+        try {
+            const response = await fetch('/api/user', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+    
+            if (response.ok) {
+                currentUser = await response.json();
+                
+                // Update Header
+                document.getElementById('headerUserAvatar').src = currentUser.profile_picture || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(currentUser.name);
+                
+                // Update Dropdown
+                document.getElementById('dropdownName').textContent = currentUser.name;
+                document.getElementById('dropdownEmail').textContent = currentUser.email;
+                document.getElementById('dropdownAvatar').src = currentUser.profile_picture || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(currentUser.name);
+                
+                // Show Create Button if Teacher
+                if (currentUser.role === 'teacher') {
+                    createClassroomBtn.classList.remove('hidden');
+                }
+                
+                // Store user data
+                localStorage.setItem('user', JSON.stringify(currentUser));
+                
+                // Load Classrooms after user is loaded
+                loadClassrooms();
+            } else {
+                // If token is invalid, redirect to login
+                localStorage.removeItem('token');
+                window.location.href = '/login';
+            }
+        } catch (error) {
+            console.error('Error loading user data:', error);
+        }
+    }
+    
+    // Load Classrooms
+    async function loadClassrooms() {
+        const token = localStorage.getItem('token');
+        try {
+            const response = await fetch('/api/classrooms', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                if (data.success) {
+                    renderClassrooms(data.classrooms);
+                } else {
+                    console.error('Failed to load classrooms:', data.message);
+                }
+            }
+        } catch (error) {
+            console.error('Error loading classrooms:', error);
+        }
+    }
+    
+    // Render Classrooms
+    function renderClassrooms(classrooms) {
+        if (classrooms.length === 0) {
+            classroomGrid.innerHTML = `
+                <div class="col-span-full text-center py-12">
+                    <div class="text-gray-400 mb-4">
+                        <i class="fas fa-chalkboard text-6xl"></i>
+                    </div>
+                    <h3 class="text-xl font-medium text-gray-600">No classrooms found</h3>
+                    <p class="text-gray-500 mt-2">Create a new classroom to get started.</p>
+                </div>
+            `;
+            return;
+        }
+        
+        classroomGrid.innerHTML = classrooms.map(cls => `
+            <article class="bg-white rounded-xl shadow-md overflow-hidden flex flex-col hover:shadow-lg transition cursor-pointer" onclick="openClassroomDetails(${cls.id})">
+                <div class="p-6 text-white card-header-bg bg-iomp-card-blue bg-map-pattern relative">
+                    <h2 class="text-xl font-bold">${cls.name}</h2>
+                    <p class="text-sm mt-1 opacity-90">${cls.teacher_name}</p>
+                    <div class="absolute bottom-[-20px] right-6 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md text-iomp-blue-dark font-bold text-lg">
+                        ${cls.name.substring(0, 2).toUpperCase()}
+                    </div>
+                </div>
+                <div class="h-6 bg-white"></div>
+                <div class="p-6 bg-white flex-grow">
+                    <p class="text-gray-600 text-sm line-clamp-2 mb-4">${cls.description || 'No description available.'}</p>
+                    <div class="flex justify-around text-center text-iomp-card-text border-t pt-4">
+                        <div class="hover:text-iomp-card-blue">
+                            <i class="fas fa-book-open text-xl"></i>
+                            <span class="block text-xs mt-1">Materials</span>
+                        </div>
+                        <div class="hover:text-iomp-card-blue">
+                            <i class="fas fa-tasks text-xl"></i>
+                            <span class="block text-xs mt-1">Assignments</span>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        `).join('');
+    }
+    
+    // Open Classroom Details
+    window.openClassroomDetails = async function(classId) {
+        currentClassId = classId;
+        const token = localStorage.getItem('token');
+        
+        try {
+            const response = await fetch(`/api/classrooms/${classId}/details`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                
+                // Update Modal Content
+                detailsClassName.textContent = data.classroom.name;
+                detailsClassTeacher.textContent = data.classroom.teacher_name;
+                
+                // Show/Hide Teacher Actions
+                if (currentUser.role === 'teacher' && currentUser.id === data.classroom.teacher_id) {
+                    addMaterialBtn.classList.remove('hidden');
+                    addAssignmentBtn.classList.remove('hidden');
+                    deleteClassroomBtn.classList.remove('hidden');
+                } else {
+                    addMaterialBtn.classList.add('hidden');
+                    addAssignmentBtn.classList.add('hidden');
+                    deleteClassroomBtn.classList.add('hidden');
+                }
+                
+                // Render Lists
+                renderMaterials(data.materials);
+                renderAssignments(data.assignments);
+                
+                // Show Modal
+                classroomDetailsModal.classList.remove('hidden');
+                classroomDetailsModal.classList.add('flex');
+            }
+        } catch (error) {
+            console.error('Error loading details:', error);
+        }
+    };
+    
+    function renderMaterials(materials) {
+        if (!materials || materials.length === 0) {
+            materialsList.innerHTML = '<p class="text-gray-500 italic">No materials uploaded yet.</p>';
+            return;
+        }
+        
+        materialsList.innerHTML = materials.map(mat => `
+            <div class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
+                <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mr-4">
+                    <i class="fas ${getIconForType(mat.file_type)}"></i>
+                </div>
+                <div class="flex-1">
+                    <h4 class="font-medium text-gray-800">${mat.title}</h4>
+                    <p class="text-xs text-gray-500">${new Date(mat.created_at).toLocaleDateString()}</p>
+                </div>
+                <a href="${mat.file_url}" target="_blank" class="text-blue-600 hover:text-blue-800 px-3 py-1 rounded border border-blue-200 hover:bg-blue-50 text-sm">
+                    View
+                </a>
+            </div>
+        `).join('');
+    }
+    
+    function renderAssignments(assignments) {
+        if (!assignments || assignments.length === 0) {
+            assignmentsList.innerHTML = '<p class="text-gray-500 italic">No assignments created yet.</p>';
+            return;
+        }
+        
+        assignmentsList.innerHTML = assignments.map(asn => `
+            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-sm transition">
+                <div class="flex justify-between items-start mb-2">
+                    <h4 class="font-bold text-gray-800">${asn.title}</h4>
+                    <span class="text-xs font-medium px-2 py-1 bg-red-100 text-red-600 rounded">Due: ${new Date(asn.due_date).toLocaleDateString()}</span>
+                </div>
+                <p class="text-gray-600 text-sm mb-3">${asn.description}</p>
+                <div class="flex justify-end">
+                    <button class="text-sm text-white bg-iomp-blue-light hover:bg-iomp-blue-dark px-4 py-2 rounded transition">
+                        View Details
+                    </button>
+                </div>
+            </div>
+        `).join('');
+    }
+    
+    function getIconForType(type) {
+        switch(type) {
+            case 'pdf': return 'fa-file-pdf';
+            case 'video': return 'fa-video';
+            case 'link': return 'fa-link';
+            default: return 'fa-file';
+        }
+    }
+    
+    // Delete Classroom
+    deleteClassroomBtn.addEventListener('click', async () => {
+        if (!confirm('Are you sure you want to delete this classroom? This action cannot be undone and will delete all materials and assignments.')) {
+            return;
+        }
+        
+        const token = localStorage.getItem('token');
+        try {
+            const response = await fetch(`/api/classrooms/${currentClassId}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            
+            if (response.ok) {
+                alert('Classroom deleted successfully');
+                classroomDetailsModal.classList.add('hidden');
+                classroomDetailsModal.classList.remove('flex');
+                loadClassrooms(); // Reload list
+            } else {
+                const data = await response.json();
+                alert('Failed to delete classroom: ' + data.message);
+            }
+        } catch (error) {
+            console.error('Error deleting classroom:', error);
+            alert('An error occurred while deleting the classroom.');
+        }
+    });
+
+    // Modal Logic
+    // Create Classroom
+    createClassroomBtn.addEventListener('click', () => {
+        createClassroomModal.classList.remove('hidden');
+        createClassroomModal.classList.add('flex');
+    });
+    
+    createClassroomForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const token = localStorage.getItem('token');
+        
+        try {
+            const response = await fetch('/api/classrooms', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(Object.fromEntries(formData))
+            });
+            
+            if (response.ok) {
+                createClassroomModal.classList.add('hidden');
+                createClassroomModal.classList.remove('flex');
+                e.target.reset();
+                loadClassrooms(); // Reload list
+            } else {
+                const data = await response.json();
+                alert('Failed to create classroom: ' + data.message);
+            }
+        } catch (error) {
+            console.error('Error creating classroom:', error);
+            alert('An error occurred while creating the classroom.');
+        }
+    });
+    
+    // Upload Material
+    addMaterialBtn.addEventListener('click', () => {
+        document.getElementById('materialClassId').value = currentClassId;
+        uploadMaterialModal.classList.remove('hidden');
+        uploadMaterialModal.classList.add('flex');
+    });
+    
+    uploadMaterialForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const token = localStorage.getItem('token');
+        const classId = formData.get('class_id');
+        
+        try {
+            const response = await fetch(`/api/classrooms/${classId}/materials`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+                body: formData
+            });
+            
+            if (response.ok) {
+                uploadMaterialModal.classList.add('hidden');
+                uploadMaterialModal.classList.remove('flex');
+                e.target.reset();
+                openClassroomDetails(classId); // Reload details
+            } else {
+                const data = await response.json();
+                alert(data.message || 'Upload failed');
+            }
+        } catch (error) {
+            console.error('Error uploading material:', error);
+            alert('Error uploading material');
+        }
+    });
+    
+    // Create Assignment
+    addAssignmentBtn.addEventListener('click', () => {
+        document.getElementById('assignmentClassId').value = currentClassId;
+        createAssignmentModal.classList.remove('hidden');
+        createAssignmentModal.classList.add('flex');
+    });
+    
+    createAssignmentForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const token = localStorage.getItem('token');
+        const classId = formData.get('class_id');
+        
+        try {
+            const response = await fetch(`/api/classrooms/${classId}/assignments`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(Object.fromEntries(formData))
+            });
+            
+            if (response.ok) {
+                createAssignmentModal.classList.add('hidden');
+                createAssignmentModal.classList.remove('flex');
+                e.target.reset();
+                openClassroomDetails(classId); // Reload details
+            }
+        } catch (error) {
+            console.error('Error creating assignment:', error);
+        }
+    });
+    
+    // Close Modals
+    document.querySelectorAll('.close-modal, .close-details, .close-upload, .close-assignment').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const modal = btn.closest('.fixed');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        });
+    });
+    
+    // Tabs Logic
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                b.classList.remove('text-iomp-blue-dark', 'border-b-2', 'border-iomp-blue-dark');
+                b.classList.add('text-gray-500');
+            });
+            
+            // Add active class to clicked tab
+            btn.classList.remove('text-gray-500');
+            btn.classList.add('text-iomp-blue-dark', 'border-b-2', 'border-iomp-blue-dark');
+            
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+            
+            // Show target tab content
+            document.getElementById(btn.dataset.tab + 'Tab').classList.remove('hidden');
+        });
+    });
+    
+    // Load Notifications
+    async function loadNotifications() {
+        const token = localStorage.getItem('token');
+        if (!token) return;
+    
+        try {
+            const response = await fetch('/api/auth/notifications', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            
+            if (response.ok) {
+                notifications = await response.json();
+                const unreadCount = notifications.filter(n => !n.read).length;
+                updateNotificationBadge(unreadCount);
+                renderNotifications();
+            }
+        } catch (error) {
+            console.error('Error loading notifications:', error);
+        }
+    }
+    
+    // Update notification badge
+    function updateNotificationBadge(count) {
+        if (count > 0) {
+            notificationBadge.textContent = count > 99 ? '99+' : count;
+            notificationBadge.style.display = 'block';
+        } else {
+            notificationBadge.style.display = 'none';
+        }
+    }
+    
+    // Render notifications
+    function renderNotifications() {
+        if (notifications.length === 0) {
+            notificationList.innerHTML = '<div class="p-8 text-center text-gray-500"><i class="fas fa-bell-slash text-3xl mb-2"></i><p>No notifications</p></div>';
+            return;
+        }
+        
+        notificationList.innerHTML = notifications.map(notif => `
+            <div class="notification-item ${notif.read ? '' : 'unread'}" onclick="handleNotificationClick(${notif.id})">
+                <div class="flex items-start space-x-3">
+                    <div class="flex-shrink-0">
+                        <i class="fas ${notif.icon} text-iomp-blue-light text-xl"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="font-semibold text-gray-900 text-sm">${notif.title}</p>
+                        <p class="text-sm text-gray-600 mt-1">${notif.message}</p>
+                        <p class="text-xs text-gray-400 mt-2"><i class="far fa-clock mr-1"></i>${notif.timestamp}</p>
+                    </div>
+                    ${!notif.read ? '<div class="flex-shrink-0"><span class="inline-block w-2 h-2 bg-blue-500 rounded-full"></span></div>' : ''}
+                </div>
+            </div>
+        `).join('');
+    }
+    
+    // Toggle notification panel
+    notificationBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        notificationPanel.classList.toggle('active');
+        profileDropdown.classList.remove('active'); // Close profile dropdown if open
+    });
+    
+    // Close notification panel when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!notificationPanel.contains(e.target) && e.target !== notificationBtn) {
+            notificationPanel.classList.remove('active');
+        }
+    });
+    
+    // Handle notification click
+    window.handleNotificationClick = async function(notificationId) {
+        try {
+            const token = localStorage.getItem('token');
+            await fetch(`/api/auth/notifications/${notificationId}/read`, {
+                method: 'PUT',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            
+            // Update local state
+            const notif = notifications.find(n => n.id === notificationId);
+            if (notif && !notif.read) {
+                notif.read = true;
+                const unreadCount = notifications.filter(n => !n.read).length;
+                updateNotificationBadge(unreadCount);
+                renderNotifications();
+            }
+        } catch (error) {
+            console.error('Error marking notification as read:', error);
+        }
+    };
+    
+    // Mark all as read
+    document.getElementById('markAllRead').addEventListener('click', async () => {
+        notifications.forEach(n => n.read = true);
+        updateNotificationBadge(0);
+        renderNotifications();
+    });
+    
+    // Initialize
+    loadUserData();
+    loadNotifications();
+    
+    // Refresh notifications every 30 seconds
+    setInterval(loadNotifications, 30000);
+</script>
+<script src="chatbot_widget.js"></script>
 </body></html>

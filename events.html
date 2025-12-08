@@ -158,95 +158,62 @@
     document.getElementById('userAvatar').src = user.profile_picture;
     document.getElementById('welcomeText').textContent = `Browse all upcoming events for ${user.name}`;
     
-    // Sample events data (in a real app, this would come from API)
-    const events = [
-      {
-        id: 1,
-        title: 'Annual Tech & Culture Fest 2025',
-        date: 'Jan 15, 2025',
-        time: '3:00 PM',
-        location: 'Main Auditorium',
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBYu9XGeHMD2jNVeKDeEbeN3IwcLgRIGoN3ttsLOfOIH0UqlIhUZkn5E6s0UOPMvF4wyHZaDfFpkbzSh1fWEnl4_P8N3hu3bVfKRSIwifQUg9VKWrYdXkZNADvY7m9s-sKv5hPg2Cdhj5E9VTpu_WBlahgLu2oMywyvMsuiIaHriCn4T1AtZku0TcA13xtPlzUcEl7ZiRXIgQFRqhyn9QBQgYVWe1Jcuu0Uxl79w9F-Z5UN9r4Q33v2bo9A0-_ELwdlXuizzk4CSRfA',
-        description: 'Join us for our annual celebration of technology and culture'
-      },
-      {
-        id: 2,
-        title: 'Guest Lecture: Future of AI',
-        date: 'Jan 18, 2025',
-        time: '1:00 PM',
-        location: 'Conference Hall A',
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuC0qheSAbfbQYAtcoLYu43FJup1xQLWQITkXvE1jq0pN_gdQsIafEc9NMjUGEKAo8emdKF6zXBMQaJsARANtWx3-xHcEJAJzVdkrrx1yBQlCP5QfwLFLqIH4LzBfithvRglN_s_mels9kdnTgvoOZNca5r5lJQ_znCmdV3elJ-V9FLRoDlmb1kr1o1TFKzpXKAFtSdtOq8VEdtabNdjS8nHsF2vo_JG_vrkh0I1yMZyMIBqqx9LqLicH9JF4fHFk3O7OMIIuIL2tp_a',
-        description: 'Expert insights on the future of Artificial Intelligence'
-      },
-      {
-        id: 3,
-        title: 'Campus Job Fair 2025',
-        date: 'Jan 20, 2025',
-        time: '10:00 AM',
-        location: 'Sports Ground',
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCJvc4P53qFJsWGDnts3G-_2IdUO5Rgst98xZlOsLfBimIS5sTKWJeK0ugnlP65VyqOWvUEKW6MjQvz_Av9LAoH4V6BUj1vZwbJ9cegeBtFjiiZWNZzZU2V003RSSaoaOTtsCj0pbpd6k8-yGm8Q7M70JhjAKDhXBywLw0eqAP1HG02piJ6YXf1y5YOMy2nYVBUQPBypDvQ692Z4C38-h6StUYOCN5dKqNGI-Z3Wnc11oKjIrWpqBo44btFSK30yb6Tz1Fm8ramv02O',
-        description: 'Meet top recruiters from leading companies'
-      },
-      {
-        id: 4,
-        title: 'Coding Hackathon 2025',
-        date: 'Jan 25, 2025',
-        time: '9:00 AM',
-        location: 'Computer Lab',
-        image: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=500&h=300&fit=crop',
-        description: '24-hour coding competition with amazing prizes'
-      },
-      {
-        id: 5,
-        title: 'Sports Day 2025',
-        date: 'Feb 1, 2025',
-        time: '8:00 AM',
-        location: 'Athletic Field',
-        image: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=500&h=300&fit=crop',
-        description: 'Annual sports day with various competitions'
-      },
-      {
-        id: 6,
-        title: 'Cultural Night',
-        date: 'Feb 10, 2025',
-        time: '6:00 PM',
-        location: 'Main Stage',
-        image: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=500&h=300&fit=crop',
-        description: 'Showcase your talents in music, dance, and drama'
-      }
-    ];
+    // Fetch events from API
+    fetch('/api/events')
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          renderEvents(data.events);
+        } else {
+          console.error('Failed to load events');
+        }
+      })
+      .catch(err => console.error('Error fetching events:', err));
 
-    // Render events
-    const container = document.getElementById('eventsContainer');
-    events.forEach(event => {
-      const eventCard = `
-        <div class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition cursor-pointer" onclick="alert('Event: ${event.title}')">
-          <img src="${event.image}" alt="${event.title}" class="w-full h-48 object-cover">
-          <div class="p-4">
-            <h3 class="font-bold text-gray-900 text-lg mb-2">${event.title}</h3>
-            <p class="text-sm text-gray-600 mb-3">${event.description}</p>
-            <div class="space-y-2">
-              <div class="flex items-center text-sm text-gray-500">
-                <i class="far fa-calendar mr-2"></i>
-                <span>${event.date}</span>
+    function renderEvents(events) {
+      const container = document.getElementById('eventsContainer');
+      container.innerHTML = ''; // Clear loading state if any
+
+      if (events.length === 0) {
+        container.innerHTML = '<p class="text-center text-gray-500 col-span-full">No upcoming events found.</p>';
+        return;
+      }
+
+      events.forEach(event => {
+        // Format date
+        const dateObj = new Date(event.date);
+        const dateStr = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        const timeStr = dateObj.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+
+        const eventCard = `
+          <div class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition cursor-pointer" onclick="window.location.href='event_register.html?event=${event.id}'">
+            <img src="${event.image_url || 'https://via.placeholder.com/500x300?text=Event'}" alt="${event.title}" class="w-full h-48 object-cover">
+            <div class="p-4">
+              <h3 class="font-bold text-gray-900 text-lg mb-2">${event.title}</h3>
+              <p class="text-sm text-gray-600 mb-3 line-clamp-2">${event.description || ''}</p>
+              <div class="space-y-2">
+                <div class="flex items-center text-sm text-gray-500">
+                  <i class="far fa-calendar mr-2"></i>
+                  <span>${dateStr}</span>
+                </div>
+                <div class="flex items-center text-sm text-gray-500">
+                  <i class="far fa-clock mr-2"></i>
+                  <span>${timeStr}</span>
+                </div>
+                <div class="flex items-center text-sm text-gray-500">
+                  <i class="fas fa-map-marker-alt mr-2"></i>
+                  <span>${event.location || 'TBD'}</span>
+                </div>
               </div>
-              <div class="flex items-center text-sm text-gray-500">
-                <i class="far fa-clock mr-2"></i>
-                <span>${event.time}</span>
-              </div>
-              <div class="flex items-center text-sm text-gray-500">
-                <i class="fas fa-map-marker-alt mr-2"></i>
-                <span>${event.location}</span>
-              </div>
+              <button class="mt-4 w-full bg-iomp-blue-light text-white py-2 rounded-lg hover:bg-iomp-blue-dark transition">
+                Register
+              </button>
             </div>
-            <button class="mt-4 w-full bg-iomp-blue-light text-white py-2 rounded-lg hover:bg-iomp-blue-dark transition">
-              Register
-            </button>
           </div>
-        </div>
-      `;
-      container.innerHTML += eventCard;
-    });
+        `;
+        container.innerHTML += eventCard;
+      });
+    }
     
     // Profile Dropdown Functionality
     const userAvatar = document.getElementById('userAvatar');
@@ -310,5 +277,6 @@
     };
   }
 </script>
+<script src="chatbot_widget.js"></script>
 </body>
 </html>

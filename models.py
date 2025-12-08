@@ -91,6 +91,9 @@ class EventRegistration(db.Model):
     event_id = db.Column(db.Integer, db.ForeignKey('events.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     status = db.Column(db.String(20), default='registered') # registered, attended, cancelled
+    phone = db.Column(db.String(20))
+    dietary_requirements = db.Column(db.Text)
+    accessibility_needs = db.Column(db.Text)
     registered_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 class Announcement(db.Model):
@@ -125,7 +128,10 @@ class Classroom(db.Model):
     description = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
+    teacher = db.relationship('User', foreign_keys=[teacher_id])
     materials = db.relationship('Material', backref='classroom', lazy=True)
+    assignments = db.relationship('Assignment', backref='classroom', lazy=True)
+    enrollments = db.relationship('Enrollment', backref='classroom', lazy=True)
     attendance_records = db.relationship('Attendance', backref='classroom', lazy=True)
 
     def to_dict(self):
@@ -134,7 +140,8 @@ class Classroom(db.Model):
             'name': self.name,
             'code': self.code,
             'description': self.description,
-            'teacher_id': self.teacher_id
+            'teacher_id': self.teacher_id,
+            'teacher_name': self.teacher.name if self.teacher else 'Unknown'
         }
 
 class Material(db.Model):
@@ -146,6 +153,44 @@ class Material(db.Model):
     file_url = db.Column(db.String(500), nullable=False)
     file_type = db.Column(db.String(50))
     uploaded_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'classroom_id': self.classroom_id,
+            'title': self.title,
+            'file_url': self.file_url,
+            'file_type': self.file_type,
+            'uploaded_at': self.uploaded_at.isoformat()
+        }
+
+class Assignment(db.Model):
+    __tablename__ = 'assignments'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    classroom_id = db.Column(db.Integer, db.ForeignKey('classrooms.id'), nullable=False)
+    title = db.Column(db.String(200), nullable=False)
+    description = db.Column(db.Text)
+    due_date = db.Column(db.DateTime)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'classroom_id': self.classroom_id,
+            'title': self.title,
+            'description': self.description,
+            'due_date': self.due_date.isoformat() if self.due_date else None,
+            'created_at': self.created_at.isoformat()
+        }
+
+class Enrollment(db.Model):
+    __tablename__ = 'enrollments'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    classroom_id = db.Column(db.Integer, db.ForeignKey('classrooms.id'), nullable=False)
+    enrolled_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 class Attendance(db.Model):
     __tablename__ = 'attendance'

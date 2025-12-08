@@ -29,10 +29,12 @@ CORS(app)
 # Import routes after app initialization
 from routes import auth_bp
 from routes_new import api_bp
+from chatbot import chat_bp
 
 # Register blueprints
 app.register_blueprint(auth_bp, url_prefix='/api/auth')
 app.register_blueprint(api_bp, url_prefix='/api')
+app.register_blueprint(chat_bp, url_prefix='/api')
 
 # Serve static HTML files
 @app.route('/')
@@ -55,9 +57,17 @@ def events_page():
 def calendar_page():
     return send_from_directory('.', 'calander.html')
 
+@app.route('/classroom.html')
+def classroom_page():
+    return send_from_directory('.', 'classroom.html')
+
 @app.route('/settings')
 def settings_page():
     return send_from_directory('.', 'settings.html')
+
+@app.route('/uploads/<path:filename>')
+def uploaded_file(filename):
+    return send_from_directory('uploads', filename)
 
 @app.route('/messages')
 def messages_page():
