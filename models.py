@@ -31,10 +31,6 @@ class User(db.Model):
     profile_picture = db.Column(db.String(500), default='https://lh3.googleusercontent.com/aida-public/AB6AXuDJ7alwZ4VtU9QjSG7VKafpieuWwNgPDgp2Y4KxAjlKwzhLF9QwtgPuE_RxEueIXjzAiJU3DrN2mg8myDX5Rfxgw2ifFs1p5OCij9LY2ZGhTKIh0kYMHHC3Mtg1ufz4cR_l1c73jMMIalIAWIrN_SQWZVBn-C9kHQB0yE-qHi9Fo1cK2mGRyJk9nbq4IFvGPJGk4WnaxiN08atgc4Ee_rrBwEKGkl90Fub5d2GJsgmGbs3F0VpIEi4oxFCGFJO761a2Q4R5x811WzyZ')
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
-    registrations = db.relationship('EventRegistration', backref='user', lazy=True)
-    attendance_records = db.relationship('Attendance', backref='user', lazy=True)
-    chat_history = db.relationship('ChatMessage', backref='user', lazy=True)
-    
     def set_password(self, password):
         """Hash and set password"""
         self.password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
